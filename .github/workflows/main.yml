@@ -2,10 +2,11 @@ name: Main
 
 on:
   push:
-    branches: [master, master-dev]
+    branches: [master, not-experimenting-branch]
   pull_request:
-    branches: [master, master-dev]
+    branches: [master, not-experimenting-branch]
   workflow_dispatch:
+    branches: [master, not-experimenting-branch]
 
 jobs:
   BuildDesktop:
