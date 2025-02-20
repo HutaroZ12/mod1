@@ -21,8 +21,11 @@ class FFMpeg {
     var target = "render_video";
     var fileName = '';
     var fileExts = '.mp4';
+    var timer:FlxTimer;
 
+    public var wentPreview:Bool = false;
     public var process:Process;
+
     public static var instance:FFMpeg;
 
     var codecList:Map<String, String> = [
@@ -41,10 +44,10 @@ class FFMpeg {
         'VP9' => 'libvp9',
         'VP9 (VAAPI)' => 'libvp9_vaapi',
         'AV1' => 'libsvtav1',
-        'AV1 (NVENC)\n(Needs RTX4000~ lmao)' => 'av1_nvenc'
+        'AV1 (NVENC for RTX40)' => 'av1_nvenc'
     ];
 
-    public function new() { }
+    public function new() {}
 
     public function init() {
         if(FileSystem.exists(target)) {
@@ -58,6 +61,8 @@ class FFMpeg {
 
         x = window.width;
         y = window.height;
+
+        timer = new FlxTimer();
     }
 
     public function setup() {
@@ -66,13 +71,14 @@ class FFMpeg {
             ClientPrefs.data.previewRender = true;
 
             FlxG.sound.play(Paths.sound('cancelMenu'), ClientPrefs.data.sfxVolume);
-
+            wentPreview = true;
             return;
         }
+        FlxG.sound.play(Paths.sound('confirmMenu'), ClientPrefs.data.sfxVolume);
 
         fileName = target + '/' + Paths.formatToSongPath(PlayState.SONG.song);
         if (FileSystem.exists(fileName + fileExts)) {
-            var millis = CoolUtil.fillNumber(Std.int(haxe.Timer.stamp() * 1000.0) % 1000, 3, '0'.fastCodeAt(0));
+            var millis = CoolUtil.fillNumber(Std.int(haxe.Timer.stamp() * 1000.0) % 1000, 3, 48);
             fileName += "-" + DateTools.format(Date.now(), "%Y-%m-%d_%H-%M-%S-") + millis;
         }
 

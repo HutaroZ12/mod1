@@ -922,6 +922,7 @@ class PlayState extends MusicBeatState
 
 			video.init();
 			video.setup();
+			previewRender = ClientPrefs.data.previewRender;
 		}
 		#end
 
@@ -1333,28 +1334,31 @@ class PlayState extends MusicBeatState
 
 				var introAlts:Array<String> = introAssets.get(stageUI);
 				var tick:Countdown = THREE;
+				var countVoice:FlxSound = null;
 
 				switch (swagCounter)
 				{
 					case 0:
-						FlxG.sound.play(Paths.sound('intro3' + introSoundsSuffix), 0.6 * ClientPrefs.data.sfxVolume);
+						countVoice = FlxG.sound.play(Paths.sound('intro3' + introSoundsSuffix), 0.6 * ClientPrefs.data.sfxVolume);
 						tick = THREE;
 					case 1:
 						countdownReady = createCountdownSprite(introAlts[0], antialias);
-						FlxG.sound.play(Paths.sound('intro2' + introSoundsSuffix), 0.6 * ClientPrefs.data.sfxVolume);
+						countVoice = FlxG.sound.play(Paths.sound('intro2' + introSoundsSuffix), 0.6 * ClientPrefs.data.sfxVolume);
 						tick = TWO;
 					case 2:
 						countdownSet = createCountdownSprite(introAlts[1], antialias);
-						FlxG.sound.play(Paths.sound('intro1' + introSoundsSuffix), 0.6 * ClientPrefs.data.sfxVolume);
+						countVoice = FlxG.sound.play(Paths.sound('intro1' + introSoundsSuffix), 0.6 * ClientPrefs.data.sfxVolume);
 						tick = ONE;
 					case 3:
 						countdownGo = createCountdownSprite(introAlts[2], antialias);
-						FlxG.sound.play(Paths.sound('introGo' + introSoundsSuffix), 0.6 * ClientPrefs.data.sfxVolume);
+						countVoice = FlxG.sound.play(Paths.sound('introGo' + introSoundsSuffix), 0.6 * ClientPrefs.data.sfxVolume);
 						tick = GO;
 					case 4:
 						tick = START;
 						FlxG.maxElapsed = nanoPosition ? 1000000 : 0.1;
 				}
+
+				#if FLX_PITCH if (countVoice != null) countVoice.pitch = playbackRate; #end
 
 				if (!skipArrowStartTween)
 				{
@@ -1393,7 +1397,7 @@ class PlayState extends MusicBeatState
 		spr.screenCenter();
 		spr.antialiasing = antialias;
 		insert(members.indexOf(notesGroup), spr);
-		FlxTween.tween(spr, {/*y: spr.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+		FlxTween.tween(spr, {/*y: spr.y + 100,*/ alpha: 0}, Conductor.crochet / 1000 / playbackRate, {
 			ease: FlxEase.cubeInOut,
 			onComplete: function(twn:FlxTween)
 			{
@@ -1680,7 +1684,7 @@ class PlayState extends MusicBeatState
 		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype');
 		switch (songSpeedType)
 		{
-			case "multiplicative":
+			case "multiplicative", "ignore changes":
 				songSpeed = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
 			case "constant":
 				songSpeed = ClientPrefs.getGameplaySetting('scrollspeed');
@@ -2353,10 +2357,11 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 
 		if (!endingSong && !inCutscene && allowDebugKeys)
 		{
-			if (controls.justPressed('debug_1'))
+			if (controls.justPressed('debug_1')) {
 				openChartEditor();
-			else if (controls.justPressed('debug_2'))
+			} else if (controls.justPressed('debug_2')) {
 				openCharacterEditor();
+			}
 		}
 
 		if (startingSong)
@@ -2419,6 +2424,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 			// Killing instances
 			notes.forEach(n -> {
 				n.dirty = false;
+				n.active = true;
 				invalidateNote(n);
 			});
 
@@ -2806,7 +2812,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 			castHold = toBool(targetNote.noteData & (1<<9));
 			castMust = toBool(targetNote.noteData & (1<<8));
 			
-			shownTime = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
+			shownTime = showNotes ? castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed : 0;
 			shownRealTime = shownTime * 0.001;
 			isDisplay = targetNote.strumTime - fixedPosition < shownTime;
 
@@ -2817,11 +2823,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 				noteJudge = castHold ? tooLate : canBeHit;
 				timeLimit = (nanoPosition ? CoolUtil.getNanoTime() : Timer.stamp()) - timeout < shownRealTime;
 
-				if (showNotes) {
-					if (keepNotes) 
-						isCanPass = !skipSpawnNote || !tooLate;
-					else isCanPass = !skipSpawnNote || timeLimit;
-				} else isCanPass = false;
+				isCanPass = !skipSpawnNote || (keepNotes ? !tooLate : timeLimit);
 				
 				if (showAfter) {
 					if (!showAgain && !canBeHit) {
@@ -2830,7 +2832,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 					}
 				}
 
-				if (isCanPass && (!optimizeSpawnNote || optimizeSpawnNote && !noteJudge)) {
+				if (!noteJudge && isCanPass || !optimizeSpawnNote) {
 					noteDataInfo = targetNote.noteData;
 					if (betterRecycle) {
 						dunceNote = notes.spawnNote(targetNote, oldNote);
@@ -2858,9 +2860,8 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 						}
 						++shownCnt; ++limitCount;
 					}
-				} else if (!isCanPass || optimizeSpawnNote && noteJudge) {
+				} else if (optimizeSpawnNote) {
 					// Skip notes without spawning
-
 					strumHitId = targetNote.noteData + (castMust ? 4 : 0) & 255;
 					skipHit |= 1 << strumHitId;
 
@@ -2887,8 +2888,11 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 				castHold = toBool(targetNote.noteData & (1<<9));
 				castMust = toBool(targetNote.noteData & (1<<8));
 				
-				shownTime = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
-				shownRealTime = shownTime * 0.001;
+				if (showNotes) {
+					shownTime = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
+					shownRealTime = shownTime * 0.001;
+				}
+				
 				isDisplay = targetNote.strumTime - fixedPosition < shownTime;
 			}
 		}
@@ -3196,13 +3200,14 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		if (ffmpegMode && !previewRender) {
 			if (cancelCount < 3) {
 				FlxG.sound.play(Paths.sound('cancelMenu'), ClientPrefs.data.sfxVolume).pitch = cancelCount * 0.2 + 1;
+				Sys.println(3 - cancelCount + " left to escape the rendering.");
 				++cancelCount;
 			} else {
 				FlxG.fixedTimestep = false;
+				Sys.println("you escaped the rendering succesfully.");
 				finishSong();
 			}
 
-			Sys.println(3 - cancelCount + " left to escape the rendering.");
 			if (pauseTimer != null) pauseTimer.cancel();
 			pauseTimer = new FlxTimer().start(3, _ -> {
 				cancelCount = 0;
@@ -3593,12 +3598,10 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 				reloadHealthBarColors();
 
 			case 'Change Scroll Speed':
-				if (songSpeedType != "constant")
+				if (songSpeedType == "multiplicative")
 				{
-					if (flValue1 == null)
-						flValue1 = 1;
-					if (flValue2 == null)
-						flValue2 = 0;
+					if (flValue1 == null) flValue1 = 1;
+					if (flValue2 == null) flValue2 = 0;
 
 					var newValue:Float = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed') * flValue1;
 					
@@ -3624,7 +3627,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 					}
 				}
 			case 'Vslice Scroll Speed':
-				if (songSpeedType != "constant")
+				if (songSpeedType == "multiplicative")
 				{
 					if (flValue1 == null) flValue1 = 1;
 					if (flValue2 == null) flValue2 = 0;
@@ -4999,6 +5002,8 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 				FlxG.updateFramerate = ClientPrefs.data.framerate;
 			}
 			if (!previewRender) video.destroy();
+
+			if (video.wentPreview) ClientPrefs.data.previewRender = false;
 		}
 		#end
 

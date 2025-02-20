@@ -5,7 +5,6 @@ import mikolka.vslice.freeplay.FreeplayState as NewFreeplayState;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
-import lime.app.Application;
 import states.editors.MasterEditorMenu;
 import options.OptionsState;
 
@@ -264,7 +263,7 @@ class MainMenuState extends MusicBeatState
 
 		super.update(elapsed);
 	}
-
+	
 	function changeItem(huh:Int = 0)
 	{
 		FlxG.sound.play(Paths.sound('scrollMenu'), ClientPrefs.data.sfxVolume);

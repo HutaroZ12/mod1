@@ -1,6 +1,7 @@
 @echo off
 color 0a
 cd ..
+@echo on
 echo Installing dependencies...
 echo This might take a few moments depending on your internet speed.
 haxelib install lime 8.1.3
