@@ -187,8 +187,8 @@ class PlayState extends MusicBeatState
 
 	var splashCount:Int = ClientPrefs.data.splashCount != 0 ? ClientPrefs.data.splashCount : 2147483647;
 	var splashOpponent:Bool = ClientPrefs.data.splashOpponent;
-	var enableSplash:Bool = ClientPrefs.data.splashAlpha != 0;
-	var enableHoldSplash:Bool = ClientPrefs.data.holdSplashAlpha != 0;
+	var enableSplash:Bool = ClientPrefs.data.splashAlpha != 0 && ClientPrefs.data.splashSkin != "None";
+	var enableHoldSplash:Bool = ClientPrefs.data.holdSplashAlpha != 0 && ClientPrefs.data.holdSkin != "None";
 
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
@@ -1731,7 +1731,7 @@ class PlayState extends MusicBeatState
 		if (bfVocal) FlxG.sound.list.add(vocals);
 		if (opVocal) FlxG.sound.list.add(opponentVocals);
 
-		inst = new FlxSound();
+		inst = new FlxSound(); trace(altInstrumentals);
 		try { inst.loadEmbedded(Paths.inst(altInstrumentals ?? songData.song)); }
 		catch (e:Dynamic) {}
 		FlxG.sound.list.add(inst);
@@ -2802,6 +2802,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 	public function noteSpawn()
 	{
 		timeout = nanoPosition ? CoolUtil.getNanoTime() : Timer.stamp();
+		
 		if (unspawnNotes.length > totalCnt)
 		{
 			limitCount = notes.countLiving();
@@ -2832,7 +2833,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 					}
 				}
 
-				if (!noteJudge && isCanPass || !optimizeSpawnNote) {
+				if ((!noteJudge || !optimizeSpawnNote) && isCanPass) {
 					noteDataInfo = targetNote.noteData;
 					if (betterRecycle) {
 						dunceNote = notes.spawnNote(targetNote, oldNote);
@@ -2860,7 +2861,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 						}
 						++shownCnt; ++limitCount;
 					}
-				} else if (optimizeSpawnNote) {
+				} else {
 					// Skip notes without spawning
 					strumHitId = targetNote.noteData + (castMust ? 4 : 0) & 255;
 					skipHit |= 1 << strumHitId;
@@ -4214,13 +4215,13 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		note.rating = daRating.name;
 		score = daRating.score;
 
-		if(!practiceMode && !cpuControlled) {
+		if(!practiceMode) {
 			songScore += score;
 			if(!note.ratingDisabled)
 			{
 				songHits++;
 				totalPlayed++;
-				if (!cpuControlled) recalculateRating();
+				recalculateRating();
 			}
 		}
 	}
@@ -4519,9 +4520,9 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 
 	function noteMiss(daNote:Note):Void
 	{ // You didn't hit the key and let it go offscreen, also used by Hurt Notes
+		if (daNote.missed) return;
 		// Dupe note remove
-		notes.forEachAlive(function(note:Note)
-		{
+		notes.forEachAlive( note -> {
 			if (daNote != note
 				&& daNote.mustPress
 				&& daNote.noteData == note.noteData
@@ -4548,8 +4549,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 	// It's only works when ghost tapping disabled
 	function noteMissPress(direction:Int = 1):Void 
 	{
-		if (ClientPrefs.data.ghostTapping)
-			return; // fuck it
+		if (ClientPrefs.data.ghostTapping) return; // fuck it
 
 		noteMissCommon(direction);
 		FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
@@ -4586,8 +4586,6 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		var lastCombo:Float = combo;
 		combo = 0;
 
-		if (note != null) note.missed = true;
-
 		health -= subtract * healthLoss;
 		if (!practiceMode)
 			songScore -= 10;
@@ -4617,7 +4615,9 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 				gf.specialAnim = true;
 			}
 		}
+
 		if (bfVocal) vocals.volume = 0;
+		if (note != null)note.missed = true;
 	}
 
 	var result:Dynamic;
@@ -4803,7 +4803,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 				++combo; ++bfSideHit; globalNoteHit = true;
 				maxCombo = Math.max(maxCombo, combo);
 				if (showPopups) popUpHitNote = note;
-				addScore(note);
+				if (!cpuControlled) addScore(note);
 			}
 
 			bfHit = true;

@@ -489,20 +489,10 @@ class Note extends FlxSprite
 		_lastValidChecked = '';
 	}
 	
-	var strumX:Float;
-	var strumY:Float;
-	var strumAngle:Float;
-	var strumAlpha:Float;
-	var strumDirection:Float;
 	var angleDir:Float;
 	public function followStrumNote(songSpeed:Float = 1)
 	{
 		if (followed) return;
-		strumX = strum.x;
-		strumY = strum.y;
-		strumAngle = strum.angle;
-		strumAlpha = strum.alpha;
-		strumDirection = strum.direction;
 
 		if (isSustainNote)
 		{
@@ -527,19 +517,19 @@ class Note extends FlxSprite
 		distance = (0.45 * (Conductor.songPosition - strumTime) * songSpeed * multSpeed);
 		if (!strum.downScroll) distance *= -1;
 
-		angleDir = strumDirection * Math.PI / 180;
+		angleDir = strum.direction * Math.PI / 180;
 		if (copyAngle)
-			angle = strumDirection - 90 + strumAngle + offsetAngle;
+			angle = strum.direction - 90 + strum.angle + offsetAngle;
 
-		if(copyAlpha)
-			alpha = strumAlpha * multAlpha;
+		if (copyAlpha)
+			alpha = strum.alpha * multAlpha;
 
-		if(copyX)
-			x = strumX + offsetX + Math.cos(angleDir) * distance;
+		if (copyX)
+			x = strum.x + offsetX + Math.cos(angleDir) * distance;
 
-		if(copyY)
+		if (copyY)
 		{
-			y = strumY + offsetY + correctionOffset + Math.sin(angleDir) * distance;
+			y = strum.y + offsetY + correctionOffset + Math.sin(angleDir) * distance;
 			if(strum.downScroll && isSustainNote)
 			{
 				if(PlayState.isPixelStage)
@@ -604,7 +594,7 @@ class Note extends FlxSprite
 
 	public function recycleNote(target:CastNote, ?oldNote:Note) {
 		wasGoodHit = hitByOpponent = tooLate = false;
-		canBeHit = spawned = followed = false; // Don't make an update call of this for the note group
+		canBeHit = spawned = followed = missed = false; // Don't make an update call of this for the note group
 		exists = true; flipY = false;
 
 		isBotplay = PlayState.instance != null ? PlayState.instance.cpuControlled : false;
