@@ -2491,7 +2491,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		}
 
 		// NPS Zone
-		if (showInfoType == "Notes Per Second" && !paused) {
+		if (((showInfoType == "Notes Per Second") || (showInfoType == "Rendered Notes and NPS")) && !paused) {
 			npsMod = bfNpsAdd > 0 || opNpsAdd > 0;
 			bothNpsAdd = bfNpsAdd > 0 && opNpsAdd > 0;
 
@@ -2600,6 +2600,27 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 					else
 						info = 'Rendered/Skipped: ${Math.max(notes.countLiving(), 0)}/$skipCnt/${notes.length}/$skipMax';
 					// info = 'Rendered/Skipped: ${notes.length}/$shownMax\n';
+				case 'Rendered Notes and NPS':
+					var nps:Array<Float> = [
+						Math.fround(opNpsVal),
+						Math.fround(bfNpsVal),
+						Math.fround(totalNpsVal),
+						Math.fround(opNpsMax),
+						Math.fround(bfNpsMax),
+						Math.fround(totalNpsMax),
+					];
+
+					var opNpsStr:String = fillNum(nps[0], Std.string(nps[3]).length, ' '.fastCodeAt(0));
+					var bfNpsStr:String = fillNum(nps[1], Std.string(nps[4]).length, ' '.fastCodeAt(0));
+					var totalNpsStr:String = fillNum(nps[2], Std.string(nps[5]).length, ' '.fastCodeAt(0));
+					
+					skipMax = FlxMath.maxInt(skipCnt, skipMax);
+
+					if (numberSeparate)
+						info = 'Rendered/Skipped: ${formatD(Math.max(notes.countLiving(), 0))}/${formatD(skipCnt)}/${formatD(notes.length)}/${formatD(skipMax)}\n\n${formatD(nps[0])}/${formatD(nps[3])}\n${formatD(nps[1])}/${formatD(nps[4])}\n${formatD(nps[2])}/${formatD(nps[5])}';
+					else
+						info = 'Rendered/Skipped: ${Math.max(notes.countLiving(), 0)}/$skipCnt/${notes.length}/$skipMax\n\n$opNpsStr/${nps[3]}\n$bfNpsStr/${nps[4]}\n$totalNpsStr/${nps[5]}';
+					nps = null; opNpsStr = bfNpsStr = totalNpsStr = null;
 				case 'Note Splash Counter':
 					var buf:StringBuf = new StringBuf();
 					buf.add("[");
