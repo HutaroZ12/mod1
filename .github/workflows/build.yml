@@ -30,6 +30,8 @@ jobs:
   build:
     name: Build
     runs-on: ${{ inputs.os }}
+    strategy:
+      fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@main
