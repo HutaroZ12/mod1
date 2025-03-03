@@ -161,3 +161,6 @@ Distributed under the Apache License 2.0. See [Licence](https://github.com/Psych
 [license-url]: https://github.com/Psych-Slice/P-Slice/blob/master/LICENSE.txt!
 
 </details>
+
+# What 99whois changed
+Merging NPS and Rendered notes shown Show info option added. Experimental.
