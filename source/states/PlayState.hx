@@ -734,9 +734,9 @@ class PlayState extends MusicBeatState
 		// Default Value has inherited from HRK Engine
 		var botplayTxtY:Float = timeBar.y + (ClientPrefs.data.downScroll ? -80 : 55);
 		switch (ClientPrefs.data.vsliceBotPlayPlace) {
-			case "Near the Health Bar":
+			case "Health Bar":
 				botplayTxtY = healthBar.y + (ClientPrefs.data.downScroll ? -80 : 70);
-			case "Near the Time Bar": // Omitted because nothing has changed.
+			case "Time Bar": // Omitted because nothing has changed.
 		}
 
 		botplayTxt = new FlxText(400, botplayTxtY, FlxG.width - 800, Language.getPhrase("Botplay").toUpperCase(), 32);
@@ -2235,6 +2235,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 	var skipCnt:Int = 0;
 	var skipBf:Int = 0;
 	var skipOp:Int = 0;
+	var skipTimeOut:Int = 0;
 	var skipTotalCnt:Float = 0;
 	var skipMax:Int = 0;
 
@@ -2645,11 +2646,11 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 					buf.add("]");
 					info = buf.toString();
 					buf = null;
-				case 'Note Appear Time':
+				case 'Note Spawn Time':
 					info = 'Speed: ${CoolUtil.decimal(songSpeed, 3)}'
-						+ ' / Time: ${CoolUtil.decimal(shownTime, 1)} ms (${CoolUtil.decimal(spawnTime, 1)} ms)'
+						+ ' / Time: ${CoolUtil.decimal(shownTime, 1)} ms'
 						+ ' / Capacity: ${CoolUtil.floatToStringPrecision(safeTime, 1)}'
-						+ ' % / Skip: ($skipTotalCnt)';
+						+ ' % / Skip: $skipTimeOut/$skipTotalCnt';
 				#if desktop
 				case 'Video Info':
 					info = numFormat((CoolUtil.getNanoTime() - elapsedNano) * 1000, 1) + " ms / " + (numberSeparate ? formatD(frameCount) : Std.string(frameCount));
@@ -2679,11 +2680,11 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 							info = 'BPM: ${Conductor.bpm}, Sections: ${curSection+1}/${Math.max(curBeat % secBeat + 1,0)}/${Math.max(curStep % secBeat + 1,0)}, Update Cnt: ${updateMaxSteps}';
 					}
 				case 'Music Sync Info':
-					info = 'Desync: ('
+					info = 'Desync: '
 						 + numFormat(desyncTime, 1)
 						 + (bfVocal ? ('/' + numFormat(desyncBf, 1)) : "")
 						 + (opVocal ? ('/' + numFormat(desyncOp, 1)) : "")
-						 + ') Sync Count: $desyncCount';
+						 + ' - Sync Count: $desyncCount';
 				case 'Debug Info':
 					debugInfos = true;
 					switch (columnIndex) {
@@ -2802,6 +2803,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 
 	var limitCount:Int = 0;
 	var oldNote:Note = null;
+	var swapNote:Note = null;
 	var skipOpCNote:CastNote;
 	var skipBfCNote:CastNote;
 	var skipNoteSplash:Note = new Note();
@@ -2881,6 +2883,8 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 					// Skip notes without spawning
 					strumHitId = targetNote.noteData + (castMust ? 4 : 0) & 255;
 					skipHit |= 1 << strumHitId;
+
+					if (!timeLimit) ++skipTimeOut;
 
 					if (cpuControlled) {
 						if (!castHold) castMust ? ++skipBf : ++skipOp;
@@ -3280,6 +3284,8 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		DiscordClient.changePresence("Chart Editor", null, null, true);
 		DiscordClient.resetClientID();
 		#end
+
+		if (FlxG.keys.pressed.CONTROL) ChartingState.youShallNotPass = false;
 
 		MusicBeatState.switchState(new ChartingState());
 	}
@@ -4757,10 +4763,10 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 
 		note.wasGoodHit = true;
 
+		if (bfHit && note.sustainLength > 0) bfHit = false;
+		
 		if (!ffmpegMode && !bfHit && note.hitsoundVolume > 0 && !note.hitsoundDisabled)
 			FlxG.sound.play(Paths.sound(note.hitsound), note.hitsoundVolume);
-
-		if (bfHit && !note.isSustainNote && note.sustainLength > 0) bfHit = false;
 
 		if (!note.hitCausesMiss) // Common notes
 		{
