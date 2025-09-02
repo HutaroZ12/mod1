@@ -6,7 +6,6 @@ import objects.Note.CastNote;
 class NoteGroup extends FlxTypedGroup<Note>
 {
     var pool:Array<Note> = [];
-    var poolAvail:Array<Bool> = [];
     var _ecyc_e:Note;
     var living:Int = 0;
     
@@ -24,7 +23,6 @@ class NoteGroup extends FlxTypedGroup<Note>
             _ecyc_e = pool.pop();
             _ecyc_e.exists = true;
         } else {
-            _ecyc_e = null;
             _ecyc_e = new Note();
             members.push(_ecyc_e);
             ++length;
@@ -68,6 +66,6 @@ class NoteGroup extends FlxTypedGroup<Note>
 
     public function debugInfo():Array<Float> {
         living = countLiving();
-        return [living, length, living * 100.0 / Math.max(length, 1), poolAvail.length];
+        return [living, length, living * 100.0 / Math.max(length, 1), length];
     }
 }

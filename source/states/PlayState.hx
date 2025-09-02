@@ -641,7 +641,7 @@ class PlayState extends MusicBeatState
 		
 		showPopups = showRating || showComboNum || showCombo;
 		if (showPopups) {
-			popUpGroup = new FlxTypedSpriteGroup<Popup>();
+			popUpGroup = new PopupGroup();
 			add(popUpGroup);
 		}
 
@@ -1314,8 +1314,8 @@ class PlayState extends MusicBeatState
 
 		seenCutscene = true;
 		inCutscene = false;
-		returnValue = callOnScripts('onStartCountdown', null, true);
-		if (returnValue != LuaUtils.Function_Stop)
+		var ret = callOnScripts('onStartCountdown', null, true);
+		if (ret != LuaUtils.Function_Stop)
 		{
 			if (skipCountdown || startOnTime > 0)
 				skipArrowStartTween = true;
@@ -1496,12 +1496,11 @@ class PlayState extends MusicBeatState
 	// `updateScore = function(miss:Bool = false) { ... }
 	// its like if it was a variable but its just a function!
 	// cool right? -Crow
-	var returnValue:Dynamic;
 	public dynamic function updateScore(miss:Bool = false, scoreBop:Bool = true)
 	{
 		if(ClientPrefs.data.vsliceLegacyBar) scoreBop = false;
-		returnValue = callOnScripts('preUpdateScore', [miss], true);
-		if (returnValue == LuaUtils.Function_Stop)
+		var ret = callOnScripts('preUpdateScore', [miss], true);
+		if (ret == LuaUtils.Function_Stop)
 			return;
 
 		updateScoreText();
@@ -1615,7 +1614,7 @@ class PlayState extends MusicBeatState
 
 	public function setSongTime(time:Float)
 	{
-		if ((!starting || time > 0) && !ffmpegMode) {
+		if (!ffmpegMode) {
 			FlxG.sound.music.pause();
 			if (bfVocal) vocals.pause();
 			if (opVocal) opponentVocals.pause();
@@ -1666,15 +1665,13 @@ class PlayState extends MusicBeatState
 		stagesFunc(function(stage:BaseStage) stage.onSkipDialogue(dialogueCount));
 	}
 
-	var starting:Bool = false;
 	var started:Bool = false;
 	function startSong():Void
 	{
 		startingSong = false;
-		starting = true; // prevent play inst double times
 
 		@:privateAccess
-		if (!ffmpegMode && startOnTime <= 0) {
+		if (!ffmpegMode) {
 			FlxG.sound.playMusic(inst._sound, ClientPrefs.data.bgmVolume, false);
 			#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
 			FlxG.sound.music.onComplete = finishSong.bind();
@@ -1693,6 +1690,7 @@ class PlayState extends MusicBeatState
 		}
 
 		setSongTime(Math.max(0, startOnTime - 500) + Conductor.offset);
+		if (startOnTime > 0) setSongTime(startOnTime);
 		startOnTime = 0;
 
 		if (paused)
@@ -1703,7 +1701,7 @@ class PlayState extends MusicBeatState
 			if (opVocal) opponentVocals.pause();
 		}
 
-		stagesFunc(function(stage:BaseStage) stage.startSong());
+		stagesFunc(stage -> stage.startSong());
 
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
@@ -1718,7 +1716,6 @@ class PlayState extends MusicBeatState
 		setOnScripts('songLength', songLength);
 		callOnScripts('onSongStart');
 
-		starting = false;
 		started = true;
 	}
 
@@ -1833,7 +1830,7 @@ class PlayState extends MusicBeatState
 			var chartNoteData:Int = 0;
 			var strumTimeVector:Vector<Float> = new Vector(8, 0.0);
 
-			var updateTime:Float = 0.1;
+			var updateElapse:Float = 0.1;
 			var syncTime:Float = Timer.stamp();
 			var removeTime:Float = ClientPrefs.data.ghostRange;
 
@@ -1842,7 +1839,7 @@ class PlayState extends MusicBeatState
 			function showProgress(force:Bool = false) {
 				if (Main.isConsoleAvailable)
 				{
-					if (Timer.stamp() - syncTime > updateTime || force)
+					if (Timer.stamp() - syncTime > updateElapse || force)
 					{
 						if (numberDelimit) 
 							Sys.stdout().writeString('\x1b[0GLoading ${formatD(cnt)}/${formatD(sectionsData.length)} (${formatD(notes + sectionNoteCnt)} notes)');
@@ -2019,10 +2016,10 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 
 	function eventEarlyTrigger(event:EventNote):Float
 	{
-		returnValue = Std.parseFloat(callOnScripts('eventEarlyTrigger', [event.event, event.value1, event.value2, event.strumTime], true));
-		if (!Math.isNaN(returnValue) && returnValue != 0)
+		var ret = Std.parseFloat(callOnScripts('eventEarlyTrigger', [event.event, event.value1, event.value2, event.strumTime], true));
+		if (!Math.isNaN(ret) && ret != 0)
 		{
-			return returnValue;
+			return ret;
 		}
 
 		switch (event.event)
@@ -2410,8 +2407,8 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 
 		if ((controls.PAUSE #if TOUCH_CONTROLS_ALLOWED || touchPad?.buttonP.justPressed #end #if android || FlxG.android.justReleased.BACK #end) && startedCountdown && canPause)
 		{
-			returnValue = callOnScripts('onPause', null, true);
-			if (returnValue != LuaUtils.Function_Stop)
+			var ret = callOnScripts('onPause', null, true);
+			if (ret != LuaUtils.Function_Stop)
 			{
 				openPauseMenu();
 			}
@@ -2454,7 +2451,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 				timeTxt.text = CoolUtil.formatTime(secondsTotal, ClientPrefs.data.timePrec);
 
 			if (ffmpegMode && !endingSong && songCalc < 0) {
-				finishSong(); endSong();
+				finishSong();
 			}
 		}
 
@@ -3487,8 +3484,8 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 	{
 		if (((skipHealthCheck && instakillOnMiss) || health <= 0) && !isDead && gameOverTimer == null)
 		{
-			returnValue = callOnScripts('onGameOver', null, true);
-			if (returnValue != LuaUtils.Function_Stop)
+			var ret = callOnScripts('onGameOver', null, true);
+			if (ret != LuaUtils.Function_Stop)
 			{
 				FlxG.animationTimeScale = 1;
 				boyfriend.stunned = true;
@@ -4040,7 +4037,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 			if (ClientPrefs.data.noteOffset <= 0 || ignoreNoteOffset) 
 				endCallback();
 			else {
-				finishTimer = new FlxTimer().start(ClientPrefs.data.noteOffset / 1000, function(tmr:FlxTimer)
+				finishTimer = new FlxTimer().start(ClientPrefs.data.noteOffset / 1000, tmr ->
 				{
 					endCallback();
 				});
@@ -4072,9 +4069,9 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		checkForAchievement([weekNoMiss, 'ur_bad', 'ur_good', 'hype', 'two_keys', 'toastie', 'debugger']);
 		#end
 
-		returnValue = callOnScripts('onEndSong', null, true);
+		var ret = callOnScripts('onEndSong', null, true);
 		var accPts = ratingPercent * totalPlayed;
-		if (returnValue != LuaUtils.Function_Stop && !transitioning)
+		if (ret != LuaUtils.Function_Stop && !transitioning)
 		{
 			var tempActiveTallises = {
 				score: songScore,
@@ -4371,7 +4368,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 	public var totalNotesHit:Float = 0.0;
 	
 	// Stores Ratings and Combo Sprites in a group
-	public var popUpGroup:FlxTypedSpriteGroup<Popup>;
+	public var popUpGroup:PopupGroup;
 	// Stores HUD Objects in a Group
 	public var uiGroup:FlxSpriteGroup;
 	// Stores Note Objects in a Group
@@ -4447,24 +4444,19 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		if (!ClientPrefs.data.comboStacking && popUpGroup.members.length > 0) {
 			for (spr in popUpGroup) {
 				spr.kill();
-				popUpGroup.remove(spr);
 			}
 		}
 
 		if (showRating && bfHit) {
 			ratingImage = cpuControlled ? forceSick.image : daRating.image;
 
-			ratingPop = popUpGroup.recycle(Popup);
+			ratingPop = popUpGroup.spawn();
 			ratingPop.setupRatingData(uiPrefix + ratingImage + uiPostfix);
-			ratingPop.ratingOtherStuff();
-			popUpGroup.add(ratingPop);
 		}
 
 		if (showCombo && combo >= 10) {
-			comboPop = popUpGroup.recycle(Popup);
+			comboPop = popUpGroup.spawn();
 			comboPop.setupComboData(uiPrefix + 'combo' + uiPostfix);
-			comboPop.comboOtherStuff();
-			popUpGroup.add(comboPop);
 		}
 
 		if (showComboNum) {
@@ -4478,37 +4470,20 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 			{	
 				var comboDigit = Std.string(tempNotes).length;
 				var delimiter = Std.int(index + 3 - comboDigit % 3);
-				var comma = delimiter % 3 == 0;
+				var comma = numberDelimit && delimiter % 3 == 0;
 				if (changePopup || combo >= 10 || combo == 0) {
-					numScore = popUpGroup.recycle(Popup);
+					numScore = popUpGroup.spawn();
 					numScore.setupNumberData(uiPrefix + 'num' + Std.int(number) + uiPostfix, index, comboDigit, numberDelimit);
 
-					if (showComboNum) popUpGroup.add(numScore);
-
-					numScore.numberOtherStuff();
-
 					if (comma && index > 0 && commaImg) {
-						numScore = popUpGroup.recycle(Popup);
+						numScore = popUpGroup.spawn();
 						numScore.setupNumberData(uiPrefix + 'numComma' + uiPostfix, index, comboDigit, numberDelimit);
-
-						if (showComboNum) popUpGroup.add(numScore);
-
-						numScore.numberOtherStuff();
 					}
 				}
 			}
 		}
 
-		// sorting shits
-		// try {
-		popUpGroup.sort(
-			(order, p1, p2) -> {
-				if (p1 != null && p2 != null) {
-					return FlxSort.byValues(FlxSort.ASCENDING, p1.popUpTime, p2.popUpTime);
-				} else return 0;
-			}
-		);
-		// } catch (e:haxe.Exception) { trace(popUpGroup.length); } // idk why but popUpGroup became null some cases
+		popUpGroup.stableSort();
 
 		for (i in seperatedScore) i = null;
 		daloop = null; tempCombo = null;
@@ -4539,8 +4514,8 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		if (cpuControlled || paused || inCutscene || key < 0 || key >= playerStrums.length || !generatedMusic || endingSong || boyfriend.stunned)
 			return;
 
-		returnValue = callOnScripts('onKeyPressPre', [key]);
-		if (returnValue == LuaUtils.Function_Stop)
+		var ret = callOnScripts('onKeyPressPre', [key]);
+		if (ret == LuaUtils.Function_Stop)
 			return;
 
 		// more accurate hit time for the ratings?
@@ -4627,8 +4602,8 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		if (cpuControlled || !startedCountdown || paused || key < 0 || key >= playerStrums.length)
 			return;
 
-		returnValue = callOnScripts('onKeyReleasePre', [key]);
-		if (returnValue == LuaUtils.Function_Stop)
+		var ret = callOnScripts('onKeyReleasePre', [key]);
+		if (ret == LuaUtils.Function_Stop)
 			return;
 
 		var spr:StrumNote = playerStrums.members[key];
@@ -5488,13 +5463,12 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		return callResult;
 	}
 
-	var returnVal:String;
 	var arr:Array<FunkinLua> = [];
 	var myValue:Dynamic;
 	public function callOnLuas(funcToCall:String, args:Array<Dynamic> = null, ignoreStops = false, exclusions:Array<String> = null,
 			excludeValues:Array<Dynamic> = null):Dynamic
 	{
-		returnVal = LuaUtils.Function_Continue;
+		var returnVal:String = LuaUtils.Function_Continue;
 		#if LUA_ALLOWED
 		if (args == null)
 			args = [];
@@ -5538,11 +5512,10 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		return returnVal;
 	}
 
-	var callValue:IrisCall;
 	public function callOnHScript(funcToCall:String, args:Array<Dynamic> = null, ?ignoreStops:Bool = false, exclusions:Array<String> = null,
 			excludeValues:Array<Dynamic> = null):Dynamic
 	{
-		returnVal = LuaUtils.Function_Continue;
+		var returnVal:String = LuaUtils.Function_Continue;
 
 		#if HSCRIPT_ALLOWED
 		if (exclusions == null)
@@ -5562,7 +5535,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 
 			try
 			{
-				callValue = script.call(funcToCall, args);
+				var callValue = script.call(funcToCall, args);
 				myValue = callValue.returnValue;
 
 				if ((myValue == LuaUtils.Function_StopHScript || myValue == LuaUtils.Function_StopAll)

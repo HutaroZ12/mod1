@@ -819,8 +819,6 @@ class LoadingState extends MusicBeatState
 				var bitmap:BitmapData = NativeFileSystem.getBitmap(file);
 				if (bitmap != null)
 				{
-
-
 					mutex.acquire();
 					requestedBitmaps.set(file, bitmap);
 					originalBitmapKeys.set(file, requestKey);

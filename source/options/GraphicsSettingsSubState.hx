@@ -43,6 +43,12 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 			BOOL);
 		addOption(option);
 
+		var option:Option = new Option('WiggleEffect <-> GlitchEffect', //Name
+			"If checked, swaps the WiggleEffect and GlitchEffect. It's for vs dave and bambi mods.", //Description
+			'swapGlitchWiggle',
+			BOOL);
+		addOption(option);
+
 		var option:Option = new Option('Note Shaders', //Name
 			"If unchecked, disables note shaders.\nPlease use the noteSkin older than psych v0.6.x!", //Description
 			'noteShaders',

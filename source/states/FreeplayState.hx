@@ -158,7 +158,8 @@ class FreeplayState extends MusicBeatState
 				else
 					Sys.stdout().writeString('\x1b[0GLoading Song (${i+1}/${songs.length})');
 			}
-		}
+		}		
+
 		Sys.println('\nLoading Done');
 		WeekData.setDirectoryFromWeek();
 
@@ -175,7 +176,6 @@ class FreeplayState extends MusicBeatState
 		diffText.antialiasing = ClientPrefs.data.antialiasing;
 		add(diffText);
 		add(scoreText);
-
 
 		missingTextBG = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		missingTextBG.alpha = 0.6;
@@ -268,10 +268,10 @@ class FreeplayState extends MusicBeatState
 	var shiftMult:Int;
 
 	var spamTime:Float = 0;
-
+	
 	override function update(elapsed:Float)
 	{
-		if(WeekData.weeksList.length < 1)
+		if (WeekData.weeksList.length < 1)
 			return;
 
 		if (FlxG.sound.music.volume < 0.7 * ClientPrefs.data.bgmVolume)

@@ -61,6 +61,7 @@ import states.TitleState;
 	public var lowQuality:Bool = false;
 	public var antialiasing:Bool = true;
 	public var shaders:Bool = true;
+	public var swapGlitchWiggle:Bool = false;
 	public var noteShaders:Bool = true;
 	public var cacheOnGPU:Bool = #if !switch false #else true #end; //From Stilic
 	public var vsync:Bool = false;
