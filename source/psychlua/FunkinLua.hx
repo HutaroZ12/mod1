@@ -1655,7 +1655,7 @@ class FunkinLua {
 
 			var resultStr:String = Lua.tostring(lua, result);
 			if(resultStr != null && result != 0) {
-				trace(resultStr);
+				Sys.println(resultStr);
 				#if (desktop || mobile)
 				CoolUtil.showPopUp(resultStr, 'Error on lua script!');
 				#else
