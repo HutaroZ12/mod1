@@ -462,7 +462,7 @@ class PlayState extends MusicBeatState
 		instakillOnMiss = ClientPrefs.getGameplaySetting('instakill');
 		instacrashOnMiss = ClientPrefs.getGameplaySetting('instacrash');
 		practiceMode = ClientPrefs.getGameplaySetting('practice');
-		cpuControlled = ClientPrefs.getGameplaySetting('botplay') || ffmpegMode;
+		cpuControlled = ClientPrefs.getGameplaySetting('botplay') || ffmpegMode || !showNotes;
 
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = initPsychCamera();

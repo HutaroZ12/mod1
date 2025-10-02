@@ -848,5 +848,5 @@ class LoadingState extends MusicBeatState
 			trace("Running base implementation. Did the cpp code break?");
         	return 2;
     	}
-    	#end
+	#end
 }

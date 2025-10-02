@@ -230,9 +230,8 @@ class OptionsState extends MusicBeatState
 			{
 				item.alpha = 1;
 				selectorLeft.x = item.x - 140;
-				selectorLeft.y = item.y + 7;
+				selectorLeft.y = selectorRight.y = item.y + 7;
 				selectorRight.x = item.x + item.width + 35;
-				selectorRight.y = item.y + 7;
 			}
 		}
 		FlxG.sound.play(Paths.sound('scrollMenu'), ClientPrefs.data.sfxVolume);
