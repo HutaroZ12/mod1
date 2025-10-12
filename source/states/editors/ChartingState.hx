@@ -284,8 +284,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var waveformEnabled:Bool = false;
 	var waveformTarget:WaveformTarget = INST;
 
-	public static var youShallNotPass:Bool = true;
-
 	final sectionTemplate:SwagSection = {
 		sectionNotes: [],
 		sectionBeats: 4,
@@ -298,33 +296,30 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 	override function create()
 	{
-		if (PlayState.chartingMode)
-			youShallNotPass = false;
-		if (youShallNotPass)
-		{
-			FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
+		#if DISABLE_CHART_EDITOR
+		FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
 
-			FlxG.timeScale = 1;
-			for (i in 0...16)
-				FlxG.sound.play(Paths.sound('jumpscare'), 1).time = new FlxRandom().float(0, 5000);
-			Timer.delay(() -> openfl.Lib.application.window.close(), 1000);
+		FlxG.timeScale = 1;
+		var pitch = FlxG.random.bool() ? 0.2 : 1;
+		for (i in 0...(16 / FlxG.random.int(1, 16)))
+			FlxG.sound.play(Paths.sound('jumpscare'), 1).time = new FlxRandom().float(0, 5000);
+		Timer.delay(() -> openfl.Lib.application.window.close(), 1000);
 
-			initPsychCamera();
-			camUI = new FlxCamera();
-			camUI.bgColor.alpha = 0;
-			FlxG.cameras.add(camUI, false);
+		initPsychCamera();
+		camUI = new FlxCamera();
+		camUI.bgColor.alpha = 0;
+		FlxG.cameras.add(camUI, false);
 
-			var txt:FlxText = new FlxText(0, 0, FlxG.width, "you don't have permission of CONTROL.\nand it's still WIP yk.");
-			txt.setFormat(Paths.font("vcr.ttf"), 60, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			txt.y = (FlxG.height - txt.height) / 2;
-			txt.cameras = [camUI];
+		var txt:FlxText = new FlxText(0, 0, FlxG.width, "This build has restricted to use chart editor.");
+		txt.setFormat(Paths.font("vcr.ttf"), 60, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		txt.y = (FlxG.height - txt.height) / 2;
+		txt.cameras = [camUI];
 
-			add(txt);
+		add(txt);
 
-			super.create();
-			return;
-		}
-
+		super.create();
+		return;
+		#else
 		PlayState.chartingMode = true;
 
 		for (zoom in zoomList)
@@ -678,6 +673,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		#end
 
 		super.create();
+		#end
 	}
 
 	var gridColors:Array<FlxColor>;
@@ -958,11 +954,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 	override function update(elapsed:Float)
 	{
-		if (youShallNotPass)
-		{
-			super.update(elapsed);
-			return;
-		}
+		#if DISABLE_CHART_EDITOR
+		super.update(elapsed);
+		return;
+		#else
 		// support latest flixel like git
 		#if (flixel <= "5.8.0")
 		mouseX = FlxG.mouse.screenX;
@@ -2370,6 +2365,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		outputTxt.visible = (outputAlpha > 0);
 		FlxG.camera.scroll.y = scrollY;
 		lastFocus = PsychUIInputText.focusOn;
+		#end
 	}
 
 	function moveSelectedNotes(noteData:Int = 0, lastY:Float) // This turns selected notes into moving notes
@@ -6251,7 +6247,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		MetaNote.noteTypeTexts = [];
 		fileDialog.destroy();
-		ChartingState.youShallNotPass = true;
 		super.destroy();
 	}
 

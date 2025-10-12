@@ -40,12 +40,16 @@ class Paths
 
 	public static var defaultNoteStuff:Array<Dynamic> = [];
 
-	public static final defaultPath:String = 'noteSkins/NOTE_assets';
 	public static var defaultSkin:String = 'noteSkins/NOTE_assets';
 	public static var defaultNoteSprite:FlxSprite;
 
 	public static var noteSkinFramesMap:Map<String, FlxFramesCollection> = new Map();
 	public static var noteSkinAnimsMap:Map<String, FlxAnimationController> = new Map();
+
+	public static var alphabetFramesMap:Map<String, FlxFramesCollection> = new Map();
+	public static var alphabetAnimsMap:Map<String, FlxAnimationController> = new Map();
+	public static var songIconFramesMap:Map<String, FlxFramesCollection> = new Map();
+	public static var songIconAnimsMap:Map<String, FlxAnimationController> = new Map();
 
 	public static var popUpFramesMap:Map<String, FlxFramesCollection> = new Map();
 

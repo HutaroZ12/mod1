@@ -2685,7 +2685,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 						+ ' % / Skip: $skipTimeOut/$skipTotalCnt';
 				#if desktop
 				case 'Video Info':
-					info = numFormat((CoolUtil.getNanoTime() - elapsedNano) * 1000, 1) + " ms / " + (numberDelimit ? formatD(frameCount) : Std.string(frameCount));
+					info = numFormat(elapsedNano * 1000, 1) + " ms / " + (numberDelimit ? formatD(frameCount) : Std.string(frameCount));
 				#end
 				case 'Note Info':
 					info = hex2bin(noteDataInfo.hex(4));
@@ -3455,8 +3455,6 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		DiscordClient.resetClientID();
 		#end
 
-		if (controls.justPressed('mobileC') || FlxG.keys.pressed.CONTROL) 
-			ChartingState.youShallNotPass = false;
 		MusicBeatState.switchState(new ChartingState(!chartingMode));
 		chartingMode = true;
 	}

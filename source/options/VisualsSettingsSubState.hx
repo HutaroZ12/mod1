@@ -43,13 +43,13 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			notes.add(note);
 			
 			var splash:NoteSplash = new NoteSplash();
-			splash.noteData = i;
-			splash.setPosition(note.x, noteY);
+			splash.babyArrow = note;
 			splash.loadSplash();
-			splash.visible = false;
+			splash.visible = true;
 			splash.alpha = ClientPrefs.data.splashAlpha;
-			splash.animation.finishCallback = name -> splash.visible = false;
+			splash.animation.finishCallback = name -> splash.kill();
 			splash.rgbShader.enabled = ClientPrefs.data.noteShaders;
+			splash.kill();
 			splashes.add(splash);
 			
 			if (splash.rgbShader.enabled) {

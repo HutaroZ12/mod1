@@ -136,14 +136,17 @@ class FreeplayState extends MusicBeatState
 		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 		scoreText.antialiasing = ClientPrefs.data.antialiasing;
+		scoreText.visible = false;
 
 		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(1, 72, 0xFF000000);
 		scoreBG.alpha = 0.6;
+		scoreBG.visible = false;
 		add(scoreBG);
 
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
 		diffText.antialiasing = ClientPrefs.data.antialiasing;
+		diffText.visible = false;
 		add(diffText);
 		add(scoreText);
 
@@ -180,6 +183,7 @@ class FreeplayState extends MusicBeatState
 
 		bottomBG = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		bottomBG.alpha = 0.6;
+		bottomBG.visible = false;
 		add(bottomBG);
 
 		var leText:String = Language.getPhrase("freeplay_tip", "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.");
@@ -189,6 +193,7 @@ class FreeplayState extends MusicBeatState
 		bottomText.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, CENTER);
 		bottomText.scrollFactor.set();
 		bottomText.antialiasing = ClientPrefs.data.antialiasing;
+		bottomText.visible = false;
 		add(bottomText);
 		
 		player = new MusicPlayer(this);
@@ -283,6 +288,7 @@ class FreeplayState extends MusicBeatState
 		if (WeekData.weeksList.length < 1)
 			return;
 		
+		// Loading the chartlist
 		while (loading < songs.length) {
 			loadSong(loading++);
 			delayTime = Timer.stamp() - stampTime;
@@ -308,6 +314,7 @@ class FreeplayState extends MusicBeatState
 					Sys.println('\nLoading Done');
 					WeekData.setDirectoryFromWeek();
 					loadingText.visible = loadingTextBG.visible = false;
+					scoreText.visible = scoreBG.visible = diffText.visible = bottomBG.visible = bottomText.visible = true;
 					
 					changeSelection(0, true);
 					updateTexts(delayTime);
