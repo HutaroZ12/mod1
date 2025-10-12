@@ -4875,9 +4875,6 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		}
 
 		strumPlayAnim(true, note.noteData, note.isSustainNote && !note.isSustainEnds);
-		// if (healthDrain) {
-		// 	health = practiceMode ? health - note.hitHealth * healthLoss : Math.max(0.1e-320, health * 0.99);
-		// }
 		note.hitByOpponent = true;
 
 		if (noteHitStage) {
