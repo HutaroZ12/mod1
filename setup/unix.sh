@@ -16,7 +16,7 @@ haxelib install hscript-iris 1.1.3 --quiet --skip-dependencies
 haxelib install tjson 1.4.0 --quiet --skip-dependencies
 
 #Specific
-haxelib install lime 8.2.2 --quiet --skip-dependencies
+haxelib git lime https://github.com/HRK-EXEX/h-slice-lime-stable.git
 haxelib install openfl 9.4.1 --quiet --skip-dependencies
 haxelib install hxdiscord_rpc 1.2.4 --quiet --skip-dependencies
 haxelib git hxCodec https://github.com/polybiusproxy/hxCodec.git 0a51aed0d9523d22a83e453ce7b593ec7fed4742 --skip-dependencies
