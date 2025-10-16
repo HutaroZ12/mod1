@@ -37,8 +37,7 @@ This engine builds upon features from my previous engine and may include new fea
 
 <details>
   <summary><h2>Original P-Slice Description</h2></summary>
-
-  <!-- Thanks soushimiya for this README template! -->
+<!-- Thanks soushimiya for this README template! -->
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a id="readme-top"></a>
 <!--

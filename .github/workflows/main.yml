@@ -1,10 +1,11 @@
-name: Main
+name: Build the game
 
 on:
   push:
-    branches: [master]
+    branches: [master-dev]
+  pull_request:
+    branches: [master-dev]
   workflow_dispatch:
-
 jobs:
   
   BuildCaches:
@@ -16,12 +17,12 @@ jobs:
           - name: Linux
             os: ubuntu-latest
             setupScript: sh ./setup/unix.sh
-            CACHE_NAME: P-Slice.1.0.desktop-cache
+            CACHE_NAME: H-Slice.0.2.2.desktop-cache
 
           - name: Mobile
             os: macos-latest
             setupScript: sh ./setup/mobile.sh
-            CACHE_NAME: P-Slice.1.0.mobile-cache
+            CACHE_NAME: H-Slice.0.2.2.mobile-cache
     uses: ./.github/workflows/dependencies.yml
     with:
       os: ${{ matrix.os }}
@@ -34,9 +35,9 @@ jobs:
     uses: ./.github/workflows/mac-universal.yml
     with:
       exportPath: macos
-      cachePath: P-Slice.1.0.build-macos
-      cacheLibrariesPath: P-Slice.1.0.mobile-cache
-      artifactName: P-Slice.1.0.macos
+      cachePath: H-Slice.0.2.2.build-macos
+      cacheLibrariesPath: H-Slice.0.2.2.mobile-cache
+      artifactName: H-Slice.0.2.2.macos
       artifactPath: export/release/macos/bin/*
   BuildDesktop:
     name: ${{ matrix.name }}
@@ -48,14 +49,18 @@ jobs:
           - name: Windows
             os: windows-2022
             buildArgs: windows
-            artifactName: H-Slice_0.2.2_windows
-            setupScript: .\"setup/windows.bat"
+            exportPath: windows
+            artifactName: H-Slice.0.2.2.windows
+            cacheLibrariesPath: H-Slice.0.2.2.desktop-cache
+            cachePath: H-Slice.0.2.2.build-windows
             artifactPath: export\release\windows\bin\*
           - name: Linux
             os: ubuntu-22.04
             buildArgs: linux
-            setupScript: sh ./setup/unix.sh
-            artifactName: H-Slice_0.2.2_linux
+            exportPath: linux
+            artifactName: H-Slice.0.2.2.linux
+            cachePath: H-Slice.0.2.2.build-linux
+            cacheLibrariesPath: H-Slice.0.2.2.desktop-cache
             artifactPath: export/release/linux/bin/*
 
     uses: ./.github/workflows/build.yml
@@ -63,7 +68,8 @@ jobs:
       name: ${{ matrix.name }}
       os: ${{ matrix.os }}
       buildArgs: ${{ matrix.buildArgs }}
-      setupScript: ${{ matrix.setupScript }}
+      cacheLibrariesPath: ${{ matrix.cacheLibrariesPath }}
+      exportPath: ${{ matrix.exportPath }}
       artifactName: ${{ matrix.artifactName }}
       artifactPath: ${{ matrix.artifactPath }}
       cachePath: ${{matrix.cachePath}}
@@ -77,23 +83,28 @@ jobs:
         include:
           - name: Android
             os: macos-15
+            exportPath: android
             buildArgs: "android"
-            cacheLibrariesPath: P-Slice.1.0.mobile-cache
-            artifactName: P-Slice.1.0.android
-            cachePath: P-Slice.1.0.build-android
+            cacheLibrariesPath: H-Slice.0.2.2.mobile-cache
+            artifactName: H-Slice.0.2.2.android
+            cachePath: H-Slice.0.2.2.build-android
             artifactPath: "export/release/android/bin/app/build/outputs/apk/release/*.apk"
           - name: iOS
             os: macos-15
             buildArgs: "ios -nosign"
-            setupScript: sh ./setup/mobile.sh
-            artifactName: H-Slice_0.2.2_ios
+            exportPath: ios
+            cacheLibrariesPath: H-Slice.0.2.2.mobile-cache
+            artifactName: H-Slice.0.2.2.ios
             artifactPath: "export/release/ios/build/Release-iphoneos/*.ipa"
+            cachePath: H-Slice.0.2.2.build-ios
     uses: ./.github/workflows/build.yml
     secrets: inherit
     with:
       name: ${{ matrix.name }}
       os: ${{ matrix.os }}
       buildArgs: ${{ matrix.buildArgs }}
-      setupScript: ${{ matrix.setupScript }}
+      exportPath: ${{ matrix.exportPath }}
       artifactName: ${{ matrix.artifactName }}
+      cacheLibrariesPath: ${{ matrix.cacheLibrariesPath }}
       artifactPath: ${{ matrix.artifactPath }}
+      cachePath: ${{matrix.cachePath}}
