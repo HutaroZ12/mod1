@@ -28,6 +28,7 @@ class SustainSplash extends FlxSprite
 
 		animation.addByPrefix('hold', 'holdCover0', 24, true);
 		animation.addByPrefix('end', 'holdCoverEnd0', 24, false);
+		if(!animation.getNameList().contains("hold")) trace("Hold splash is missing 'hold' anim!");
 	}
 
 	override function update(elapsed)
@@ -55,8 +56,11 @@ class SustainSplash extends FlxSprite
 			if (note.strum != null) setPosition(note.strum.x, note.strum.y);
 
 			animation.play('hold', true, false, 0);
-			animation.curAnim.frameRate = frameRate;
-			animation.curAnim.looped = true;
+			if (animation.curAnim != null)
+			{
+				animation.curAnim.frameRate = frameRate;
+				animation.curAnim.looped = true;
+			}
 
 			clipRect = new flixel.math.FlxRect(0, !PlayState.isPixelStage ? 0 : -210, frameWidth, frameHeight);
 
@@ -79,8 +83,8 @@ class SustainSplash extends FlxSprite
 		}
 	}
 
-	public function sendSustainEnd() {
-		if (holding) showEndSplash();
+	public function sendSustainEnd(force:Bool) {
+		if (holding || force) showEndSplash();
 	}
 
 	function showEndSplash() {

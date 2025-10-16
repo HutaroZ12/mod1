@@ -6,8 +6,42 @@ on:
   workflow_dispatch:
 
 jobs:
+  
+  BuildCaches:
+    name: ${{ matrix.name }}
+    permissions: write-all
+    strategy:
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-latest
+            setupScript: sh ./setup/unix.sh
+            CACHE_NAME: P-Slice.1.0.desktop-cache
+
+          - name: Mobile
+            os: macos-latest
+            setupScript: sh ./setup/mobile.sh
+            CACHE_NAME: P-Slice.1.0.mobile-cache
+    uses: ./.github/workflows/dependencies.yml
+    with:
+      os: ${{ matrix.os }}
+      CACHE_NAME: ${{ matrix.CACHE_NAME }}
+      setupScript: ${{ matrix.setupScript }}
+  BuildMacos:
+    name: macos
+    needs: BuildCaches
+    permissions: write-all
+    uses: ./.github/workflows/mac-universal.yml
+    with:
+      exportPath: macos
+      cachePath: P-Slice.1.0.build-macos
+      cacheLibrariesPath: P-Slice.1.0.mobile-cache
+      artifactName: P-Slice.1.0.macos
+      artifactPath: export/release/macos/bin/*
   BuildDesktop:
     name: ${{ matrix.name }}
+    needs: BuildCaches
+    permissions: write-all
     strategy:
       matrix:
         include:
@@ -23,18 +57,7 @@ jobs:
             setupScript: sh ./setup/unix.sh
             artifactName: H-Slice_0.2.2_linux
             artifactPath: export/release/linux/bin/*
-          - name: macOS x86_64
-            os: macos-14
-            buildArgs: "mac -64 -D HXCPP_M64"
-            setupScript: sh ./setup/mobile.sh
-            artifactName: H-Slice_0.2.2_macosx64
-            artifactPath: export/release/macos/bin/*
-          - name: macOS AArch64
-            os: macos-15
-            buildArgs: mac
-            setupScript: sh ./setup/mobile.sh
-            artifactName: H-Slice_0.2.2_macosarm64
-            artifactPath: export/release/macos/bin/*
+
     uses: ./.github/workflows/build.yml
     with:
       name: ${{ matrix.name }}
@@ -43,7 +66,11 @@ jobs:
       setupScript: ${{ matrix.setupScript }}
       artifactName: ${{ matrix.artifactName }}
       artifactPath: ${{ matrix.artifactPath }}
+      cachePath: ${{matrix.cachePath}}
+
   BuildMobile:
+    permissions: write-all
+    needs: BuildCaches
     name: ${{ matrix.name }}
     strategy:
       matrix:
@@ -51,8 +78,9 @@ jobs:
           - name: Android
             os: macos-15
             buildArgs: "android"
-            setupScript: sh ./setup/mobile.sh
-            artifactName: H-Slice_0.2.2_android
+            cacheLibrariesPath: P-Slice.1.0.mobile-cache
+            artifactName: P-Slice.1.0.android
+            cachePath: P-Slice.1.0.build-android
             artifactPath: "export/release/android/bin/app/build/outputs/apk/release/*.apk"
           - name: iOS
             os: macos-15
@@ -61,6 +89,7 @@ jobs:
             artifactName: H-Slice_0.2.2_ios
             artifactPath: "export/release/ios/build/Release-iphoneos/*.ipa"
     uses: ./.github/workflows/build.yml
+    secrets: inherit
     with:
       name: ${{ matrix.name }}
       os: ${{ matrix.os }}

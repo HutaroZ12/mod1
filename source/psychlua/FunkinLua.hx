@@ -1,5 +1,5 @@
-#if LUA_ALLOWED
 package psychlua;
+#if LUA_ALLOWED
 
 import backend.WeekData;
 import backend.Highscore;
@@ -786,6 +786,7 @@ class FunkinLua {
 			return true;
 		});
 		Lua_helper.add_callback(lua, "endSong", function() {
+			PlayState.instance.paused = false;
 			curGame.KillNotes();
 			curGame.endSong();
 			return true;
@@ -808,6 +809,7 @@ class FunkinLua {
 
 			PlayState.changedDifficulty = false;
 			PlayState.chartingMode = false;
+			PlayState.instance.paused = false;
 			curGame.transitioning = true;
 			FlxG.camera.followLerp = 0;
 			FlxG.sound.music.volume = 0;
@@ -1936,6 +1938,18 @@ class FunkinLua {
 		luaTrace('This platform doesn\'t support Runtime Shaders!', false, false, FlxColor.RED);
 		#end
 		return false;
+	}
+}
+#else
+class FunkinLua
+{
+		public static function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
+		if(ignoreCheck) {
+			if(deprecated) {
+				return;
+			}
+			PlayState.instance.addTextToDebug(text, color);
+		}
 	}
 }
 #end

@@ -366,10 +366,14 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 		add(bfIcon);
 	}
 
-	override function changeSelection(change:Int = 0)
+	var notesShown:Bool = false;
+	var lastSelected:Int = -1;
+	override function changeSelection(change:Float,usePrecision:Bool = false)
 	{
-		super.changeSelection(change);
-		
+		super.changeSelection(change,usePrecision);
+		if(lastSelected == curSelected) return;
+		else lastSelected = curSelected;
+
 		switch(curOption.variable)
 		{
 			case 'noteSkin', 'splashSkin', 'splashAlpha', 'splashCount':

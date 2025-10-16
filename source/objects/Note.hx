@@ -160,6 +160,7 @@ class Note extends FlxSprite
 	public var copyY:Bool = true;
 	public var copyAngle:Bool = true;
 	public var copyAlpha:Bool = true;
+	public var copyScale:Bool = true;
 
 	public var hitHealth:Float = 0.02;
 	public var missHealth:Float = 0.1;
@@ -543,6 +544,11 @@ class Note extends FlxSprite
 				}
 				y += correctionOffset * Math.sin(angleRad) + (originalHeight - height) * (-Math.sin(angleRad) + 1) * 0.5;
 			}
+		}
+		if(copyScale){
+			scale.x = strumScale.x;
+			if(!isSustainNote) scale.y = strumScale.y;
+			updateHitbox();
 		}
 	}
 
