@@ -1,5 +1,6 @@
 package states;
 
+import hrk.Eseq;
 import haxe.Timer;
 import sys.thread.Thread;
 import backend.WeekData;
@@ -117,9 +118,9 @@ class FreeplayState extends MusicBeatState
 			}
 			if(Main.isConsoleAvailable) {
 				if (ClientPrefs.data.numberFormat)
-					Sys.stdout().writeString('\x1b[0GLoading Weeklist (${CoolUtil.formatMoney(i+1)}/${CoolUtil.formatMoney(WeekData.weeksList.length)})');
+					Eseq.p('\x1b[0GLoading Weeklist (${CoolUtil.formatMoney(i+1)}/${CoolUtil.formatMoney(WeekData.weeksList.length)})');
 				else
-					Sys.stdout().writeString('\x1b[0GLoading Weeklist (${i+1}/${WeekData.weeksList.length})');
+					Eseq.p('\x1b[0GLoading Weeklist (${i+1}/${WeekData.weeksList.length})');
 			}
 		}
 		Sys.print("\n");
@@ -292,7 +293,7 @@ class FreeplayState extends MusicBeatState
 		while (loading < songs.length) {
 			loadSong(loading++);
 			delayTime = Timer.stamp() - stampTime;
-			if (delayTime > 1 / ClientPrefs.data.framerate || loading >= songs.length) {
+			if (delayTime > 1 / Math.max(ClientPrefs.data.framerate, 30) || loading >= songs.length) {
 				var curr = "", total = "", prog = CoolUtil.floatToStringPrecision(loading * 100.0 / songs.length, 1);
 
 				if (ClientPrefs.data.numberFormat) {
@@ -303,7 +304,7 @@ class FreeplayState extends MusicBeatState
 				}
 
 				if (Main.isConsoleAvailable) {
-					Sys.stdout().writeString('\x1b[0GLoading Song - $curr / $total - $prog % Done');
+					Eseq.p('\x1b[0GLoading Song - $curr / $total - $prog % Done');
 				}
 				loadingText.text = 'Loading Song...\n$curr / $total - $prog % Done';
 				loadingText.screenCenter();

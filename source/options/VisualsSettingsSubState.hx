@@ -1,7 +1,6 @@
 package options;
 
 import objects.HealthIcon;
-import mobile.backend.MobileScaleMode;
 import objects.Note;
 import objects.StrumNote;
 import objects.NoteSplash;
@@ -366,7 +365,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 		add(bfIcon);
 	}
 
-	var notesShown:Bool = false;
 	var lastSelected:Int = -1;
 	override function changeSelection(change:Float,usePrecision:Bool = false)
 	{

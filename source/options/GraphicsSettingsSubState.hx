@@ -69,6 +69,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 			'cacheOnCPU',
 			BOOL);
 		addOption(option);
+		#end
 		
 		var option:Option = new Option('GPU Caching', //Name
 			"If checked, allows the GPU to be used for caching textures,\ndecreasing RAM usage. Don't turn this on if you have a shitty Graphics Card.", //Description
@@ -146,7 +147,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		var file:String = StorageUtil.rootDir + "vsync.txt";
 		if(FileSystem.exists(file))
 			FileSystem.deleteFile(file);
-		File.saveContent(file, Std.string(ClientPrefs.data.vsync));
+		File.saveContent(file, Std.string(syncOption.getValue()));
 		FlxG.stage.application.window.vsync = syncOption.getValue();
 	}
 	#end

@@ -136,6 +136,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		add(scroll);
 		add(button);
 		#end
+
+		FlxG.sound.play(Paths.sound('scrollMenu'), ClientPrefs.data.sfxVolume);
 	}
 
 	public function addOption(option:Option) {
@@ -155,6 +157,11 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	var bindingText:Alphabet;
 	var bindingText2:Alphabet;
 
+	function getSpeed(hold:Float) {
+		hold =- 0.5;
+		return Math.max(0, hold * CoolUtil.interpolate(10, 30, hold / 5, 2));
+	}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -167,19 +174,22 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		if (controls.UI_UP_P || controls.UI_DOWN_P)
 		{
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-			changeSelection(-1,true);
+			changeSelection(controls.UI_UP_P ? -1 : 1);
+			selectHoldTime = 0;
 		}
 
-		if(controls.UI_DOWN || controls.UI_UP)
+		if (controls.UI_DOWN || controls.UI_UP)
 		{
-			var checkLastHold:Int = Std.int((selectHoldTime - 0.5) * 10);
+			var checkLastHold:Int = Std.int(getSpeed(selectHoldTime));
 			selectHoldTime += elapsed;
-			var checkNewHold:Int = Std.int((selectHoldTime - 0.5) * 10);
+			var checkNewHold:Int = Std.int(getSpeed(selectHoldTime));
 
 			if(selectHoldTime > 0.5 && checkNewHold - checkLastHold >= 1)
-				changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1));
+				changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -1 : 1), true);
 		}
+		
+		if (FlxG.mouse.wheel != 0)
+			changeSelection(-FlxG.mouse.wheel);
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'), ClientPrefs.data.sfxVolume);
@@ -255,7 +265,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 								}
 								updateTextFrom(curOption);
 								curOption.change();
-								FlxG.sound.play(Paths.sound('scrollMenu'), ClientPrefs.data.sfxVolume);
 							}
 							else if (curOption.type != STRING)
 							{
@@ -328,7 +337,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		switch (curOption.type)
 		{
 			case BOOL:
-				FlxG.sound.play(Paths.sound('scrollMenu'));
 				curOption.setValue((curOption.getValue() == true) ? false : true);
 				curOption.change();
 				reloadCheckboxes();
@@ -356,7 +364,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 				bindingKey = true;
 				holdingEsc = 0;
 				ClientPrefs.toggleVolumeKeys(false);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
 			default:
 				return;
 		}
@@ -447,7 +454,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 					changed = true;
 					curOption.keys.gamepad = keyReleased;
 				}
-				keyPressed = keyReleased = null;
 			}
 
 			if (changed)
@@ -567,11 +573,12 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		{
 			curSelected = FlxMath.wrap(curSelected + Std.int(delta), 0, optionsArray.length - 1);
 			curSelectedPartial = curSelected;
+			FlxG.sound.play(Paths.sound('scrollMenu'), ClientPrefs.data.sfxVolume);
 		}
 		else
 		{
 			curSelectedPartial = FlxMath.bound(curSelectedPartial + delta, 0, optionsArray.length - 1);
-			if(curSelected != Math.round(curSelectedPartial)) FlxG.sound.play(Paths.sound('scrollMenu'));
+			if(curSelected != Math.round(curSelectedPartial)) FlxG.sound.play(Paths.sound('scrollMenu'), ClientPrefs.data.sfxVolume);
 			curSelected = Math.round(curSelectedPartial);
 		}
 		descText.text = optionsArray[curSelected].description;

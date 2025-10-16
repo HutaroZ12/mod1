@@ -39,7 +39,6 @@ class MainMenuState extends MusicBeatState
 
 	var bg:FlxSprite;
 	var magenta:FlxSprite;
-	var camFollow:FlxObject;
 	public function new(isDisplayingRank:Bool = false) {
 		//TODO
 		super();
@@ -75,6 +74,7 @@ class MainMenuState extends MusicBeatState
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 
+		var padding:Float = 8;
 		var hrkVer:FlxText = new FlxText(padding, FlxG.height - 78 - padding, FlxG.width, 'H-Slice v' + hrkVersion, 12);
 		var psliceVer:FlxText = new FlxText(padding, FlxG.height - 58 - padding, FlxG.width, 'P-Slice v${pSliceVersion}', 12);
 		var psychVer:FlxText = new FlxText(padding, FlxG.height - 38 - padding, FlxG.width, 'Psych Engine v' + psychEngineVersion, 12);
@@ -118,18 +118,6 @@ class MainMenuState extends MusicBeatState
 		else
 		#end
 		new DesktopMenuState(this);
-	}
-
-	function goToOptions()
-	{
-		MusicBeatState.switchState(new OptionsState());
-		#if !LEGACY_PSYCH OptionsState.onPlayState = false; #end
-		if (PlayState.SONG != null)
-		{
-			PlayState.SONG.arrowSkin = null;
-			PlayState.SONG.splashSkin = null;
-			#if !LEGACY_PSYCH PlayState.stageUI = 'normal'; #end
-		}
 	}
 
 	override function update(elapsed:Float)

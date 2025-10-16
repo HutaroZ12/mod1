@@ -42,6 +42,11 @@ class PixelatedIcon extends FlxFilteredSprite
 		switch (type)
 		{
 			case LEGACY:
+				// Legacy FNF icon (no freeplay one)
+				var charPath:String = "icons/";
+				charPath += "icon-";
+				charPath += '${char}';
+				
 				var image = Paths.image(charPath, ClientPrefs.data.cacheOnGPU);
 				if (image == null) // TODO
 				{

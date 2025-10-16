@@ -1,5 +1,6 @@
 package states.editors;
 
+import mikolka.funkin.custom.mobile.MobileScaleMode;
 import mikolka.funkin.custom.FreeplayMeta.FreeplayMetaJSON;
 import openfl.net.FileReference;
 import flixel.FlxSubState;
@@ -894,8 +895,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var nextSectionTime:Float;
 	var curSectionTime:Float;
 	var secNum:Int;
-	var selectionBounds:FlxRect;
-	var noteBounds:FlxRect;
 
 	var minX:Float;
 	var diffX:Float;
@@ -1576,7 +1575,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				if (!FlxG.keys.pressed.SHIFT && !holdingAlt)
 					resetSelectedNotes();
 
-				selectionBounds = selectionBox.getScreenBounds(null, camUI);
+				var selectionBounds = selectionBox.getScreenBounds(null, camUI);
 				for (note in curRenderedNotes)
 				{
 					if (note == null)
@@ -1584,7 +1583,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 					if (!selectedNotes.contains(note) || holdingAlt /*&& FlxG.overlap(selectionBox, note)*/) // overlap doesnt work here
 					{
-						noteBounds = note.getScreenBounds(null, camUI);
+						var noteBounds = note.getScreenBounds(null, camUI);
 						noteBounds.top -= scrollY;
 						noteBounds.bottom -= scrollY;
 
@@ -4550,6 +4549,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 	var txt_altVariantSong:PsychUIInputText;
 	var txt_altInstSong:PsychUIInputText;
+	var txt_weekName:PsychUIInputText;
 	
 	var albumName:PsychUIInputText;
 	var exportMetadataBtn:PsychUIButton;

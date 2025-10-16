@@ -44,8 +44,7 @@ class NativeFileSystem
 		var sys_res = sys_path != null ? File.getContent(sys_path) : null;
 		if (sys_res != null)
 			return sys_res;
-		if (!is_preload #if PROFILE_BUILD || true #end)
-		trace('Text file doesn\'t exist!! path:${path}');
+		#if PROFILE_BUILD trace('Text file doesn\'t exist!! path:${path}'); #end
 		#end
 		return null;
 	}

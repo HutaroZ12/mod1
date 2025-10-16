@@ -100,7 +100,7 @@ class FunkinSound extends FlxSound
 				
 				var future = FlxPartialSound.partialLoadFromFile(instPath,params.partialParams.start,params.partialParams.end);
 				if(future == null){
-					trace('Internal failure loading instrumentals for ${key} "${instPath}"');
+					#if debug trace('Internal failure loading instrumentals for ${key} "${instPath}"'); #end
 					return loaded;
 				}
 				future.future.onComplete(function(sound:Sound)
@@ -116,7 +116,7 @@ class FunkinSound extends FlxSound
 						if(cap.songData == null || cap.songData.getNativeSongId() != key || fp.busy) return;
 					}
 					
-					trace("Playing preview!");
+					#if debug trace("Playing preview!"); #end
 
 					FlxG.sound.playMusic(sound,0);
 					// #if (lime_vorbis && linux)

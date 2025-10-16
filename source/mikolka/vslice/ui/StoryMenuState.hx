@@ -1,6 +1,5 @@
 package mikolka.vslice.ui;
 
-import backend.Song;
 import mikolka.funkin.custom.mobile.MobileScaleMode;
 import mikolka.compatibility.VsliceOptions;
 import mikolka.vslice.components.crash.UserErrorSubstate;
@@ -77,7 +76,9 @@ class StoryMenuState extends MusicBeatState
 			ModsHelper.clearStoredWithoutStickers();
 			stickerSubState.degenStickers();
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
-		} else Paths.clearStoredMemory();
+		}
+		else
+			Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
 		persistentUpdate = persistentDraw = true;
@@ -87,7 +88,7 @@ class StoryMenuState extends MusicBeatState
 
 		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Story Menus", null);
+		DiscordClient.changePresence("In the Menus", null);
 		#end
 
 		final accept:String = controls.mobileC ? "A" : "ACCEPT";
@@ -111,12 +112,10 @@ class StoryMenuState extends MusicBeatState
 		scoreText = new FlxText(10, 10, 0, Language.getPhrase('week_score', 'LEVEL SCORE: {1}', [lerpScore]), 36);
 		#end
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32);
-		scoreText.antialiasing = ClientPrefs.data.antialiasing;
 
 		txtWeekTitle = new FlxText(FlxG.width * 0.7, 10, 0, "", 32);
 		txtWeekTitle.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 		txtWeekTitle.alpha = 0.7;
-		txtWeekTitle.antialiasing = ClientPrefs.data.antialiasing;
 
 		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
 		var bgYellow:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 386, 0xFFF9CF51);
@@ -222,7 +221,6 @@ class StoryMenuState extends MusicBeatState
 		txtTracklist.alignment = CENTER;
 		txtTracklist.font = Paths.font("vcr.ttf");
 		txtTracklist.color = 0xFFe55777;
-		txtTracklist.antialiasing = ClientPrefs.data.antialiasing;
 		add(txtTracklist);
 		add(scoreText);
 		add(txtWeekTitle);
@@ -270,7 +268,7 @@ class StoryMenuState extends MusicBeatState
 		{
 			if (controls.BACK && !movedBack && !selectedWeek)
 			{
-				FlxG.sound.play(Paths.sound('cancelMenu'), ClientPrefs.data.sfxVolume);
+				FlxG.sound.play(Paths.sound('cancelMenu'));
 				movedBack = true;
 				MusicBeatState.switchState(new MainMenuState());
 			}
@@ -381,7 +379,7 @@ class StoryMenuState extends MusicBeatState
 
 		if (controls.BACK && !movedBack && !selectedWeek)
 		{
-			FlxG.sound.play(Paths.sound('cancelMenu'), ClientPrefs.data.sfxVolume);
+			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
 			MusicBeatState.switchState(new MainMenuState());
 		}
@@ -420,11 +418,11 @@ class StoryMenuState extends MusicBeatState
 		if (!FreeplayHelpers.weekIsLocked(loadedWeeks[curWeek].fileName))
 		{
 			var succsess = StoryModeHooks.prepareWeek(this);
-			if (!succsess) return;
-			
+			if (!succsess)
+				return;
 			if (stopspamming == false)
 			{
-				FlxG.sound.play(Paths.sound('confirmMenu'), ClientPrefs.data.sfxVolume);
+				FlxG.sound.play(Paths.sound('confirmMenu'));
 
 				grpWeekText.members[curWeek].isFlashing = true;
 				for (char in grpWeekCharacters.members)
@@ -438,7 +436,8 @@ class StoryMenuState extends MusicBeatState
 			}
 			StoryModeHooks.moveWeekToPlayState();
 		}
-		else FlxG.sound.play(Paths.sound('cancelMenu'), ClientPrefs.data.sfxVolume);
+		else
+			FlxG.sound.play(Paths.sound('cancelMenu'));
 	}
 
 	function changeDifficulty(change:Int = 0):Void
@@ -482,7 +481,7 @@ class StoryMenuState extends MusicBeatState
 		if (usePrecision)
 		{
 			if (change != 0)
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4 * ClientPrefs.data.sfxVolume);
+				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 			curWeek = FlxMath.wrap(curWeek + Std.int(change), 0, loadedWeeks.length - 1);
 			curSelectedPartial = curWeek;
 		}
@@ -490,7 +489,7 @@ class StoryMenuState extends MusicBeatState
 		{
 			curSelectedPartial = FlxMath.bound(curSelectedPartial + change, 0, loadedWeeks.length - 1);
 			if (curWeek != Math.round(curSelectedPartial))
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4 * ClientPrefs.data.sfxVolume);
+				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 			
 			curWeek = Math.round(curSelectedPartial);
 		}

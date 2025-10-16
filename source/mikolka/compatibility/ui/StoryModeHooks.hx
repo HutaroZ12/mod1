@@ -75,7 +75,7 @@ class StoryModeHooks
 	{
         // We can't use Dynamic Array .copy() because that crashes HTML5, here's a workaround.
         var songArray:Array<String> = [];
-        var leWeek:Array<Dynamic> = loadedWeeks[curWeek].songs;
+        var leWeek:Array<Dynamic> = host.loadedWeeks[StoryMenuState.curWeek].songs;
         for (i in 0...leWeek.length) {
             songArray.push(leWeek[i][0]);
         }
@@ -85,15 +85,17 @@ class StoryModeHooks
         {
             PlayState.storyPlaylist = songArray;
             PlayState.isStoryMode = true;
-            PlayState.storyDifficultyColor = host.sprDifficulty.color;
-            PlayState.storyCampaignTitle = host.txtWeekTitle.text;
-            if(PlayState.storyCampaignTitle == "") PlayState.storyCampaignTitle = "Unnamed week";
-            host.selectedWeek = true;
+			@:privateAccess {
+				PlayState.storyDifficultyColor = host.sprDifficulty.color;
+				PlayState.storyCampaignTitle = host.txtWeekTitle.text;
+				if(PlayState.storyCampaignTitle == "") PlayState.storyCampaignTitle = "Unnamed week";
+				host.selectedWeek = true;
+			}
 
-            var diffic = Difficulty.getFilePath(curDifficulty);
+            var diffic = Difficulty.getFilePath(host.curDifficulty);
             if(diffic == null) diffic = '';
 
-            PlayState.storyDifficulty = curDifficulty;
+            PlayState.storyDifficulty = host.curDifficulty;
 
 			// ? We load erect songs (because yes)
 			if (diffic == "-erect" || diffic == "-nightmare")

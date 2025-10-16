@@ -285,7 +285,7 @@ class FreeplayDJ extends FlxAtlasSprite
         // boyfriend switches channel code?
         // runTvLogic();
       }
-      trace('Replay idle: ${frame}');
+      #if debug trace('Replay idle: ${frame}'); #end
       playFlashAnimation(playableCharData.getAnimationPrefix('cartoon'), true, false, false, frame);
       // trace('Finished confirm');
     }
@@ -299,7 +299,7 @@ class FreeplayDJ extends FlxAtlasSprite
     }
     else
     {
-      trace('Finished ${name}');
+      #if debug trace('Finished ${name}'); #end
     }
   }
 
@@ -315,7 +315,7 @@ class FreeplayDJ extends FlxAtlasSprite
    */
   public dynamic function onCharSelectComplete():Void
   {
-    trace('onCharSelectComplete()');
+    #if debug trace('onCharSelectComplete()'); #end
   }
 
   var offsetX:Float = 0.0;
@@ -490,12 +490,12 @@ class FreeplayDJ extends FlxAtlasSprite
         yValue += offsetY;
       }
 
-      trace('Successfully applied offset ($AnimName): ' + xValue + ', ' + yValue);
+      #if debug trace('Successfully applied offset ($AnimName): ' + xValue + ', ' + yValue); #end
       offset.set(xValue, yValue);
     }
     else
     {
-      trace('No offset found ($AnimName), defaulting to: 0, 0');
+      #if debug trace('No offset found ($AnimName), defaulting to: 0, 0'); #end
       offset.set(0, 0);
     }
   }

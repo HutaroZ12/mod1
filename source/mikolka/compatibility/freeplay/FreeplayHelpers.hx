@@ -1,5 +1,6 @@
 package mikolka.compatibility.freeplay;
 
+import hrk.Eseq;
 import haxe.Json;
 import haxe.Exception;
 import backend.StageData;
@@ -74,8 +75,8 @@ class FreeplayHelpers {
 			{
 				if (Main.isConsoleAvailable) {
 					if (ClientPrefs.data.numberFormat)
-						Sys.stdout().writeString('\x1b[0GLoading Song (${CoolUtil.formatMoney(j+offset+1)}/${CoolUtil.formatMoney(songCount)})');
-					else Sys.stdout().writeString('\x1b[0GLoading Song (${j+offset+1}/$songCount)');
+						Eseq.p('\x1b[0GLoading Song (${CoolUtil.formatMoney(j+offset+1)}/${CoolUtil.formatMoney(songCount)})');
+					else Eseq.p('\x1b[0GLoading Song (${j+offset+1}/$songCount)');
 				}
 			
 				colors = song[2];

@@ -1,5 +1,6 @@
 package states;
 
+import hrk.Eseq;
 import options.OptimizeSettingsSubState;
 import backend.StageData;
 import haxe.ds.ArraySort;
@@ -850,13 +851,9 @@ class PlayState extends MusicBeatState
 			for (i in 0...susplashMap.length) {
 				var holdSplash:SustainSplash = grpHoldSplashes.recycle(SustainSplash);
 				holdSplash.alpha = 0.0001;
-				susplashMap[i] = holdSplash;
-			}
-			
-			for (i in 0...susplashMap.length) {
-				var holdSplash:SustainSplash = susplashMap[i];
 				holdSplash.alive = false;
 				holdSplash.exists = false;
+				susplashMap[i] = holdSplash;
 			}
 		}
 
@@ -1830,7 +1827,7 @@ class PlayState extends MusicBeatState
 			var chartNoteData:Int = 0;
 			var strumTimeVector:Vector<Float> = new Vector(8, 0.0);
 
-			var updateElapse:Float = 0.1;
+			var updateElapse:Float = 0.01;
 			var syncTime:Float = Timer.stamp();
 			var removeTime:Float = ClientPrefs.data.ghostRange;
 
@@ -1842,9 +1839,9 @@ class PlayState extends MusicBeatState
 					if (Timer.stamp() - syncTime > updateElapse || force)
 					{
 						if (numberDelimit) 
-							Sys.stdout().writeString('\x1b[0GLoading ${formatD(cnt)}/${formatD(sectionsData.length)} (${formatD(notes + sectionNoteCnt)} notes)');
+							Eseq.p('\x1b[0GLoading ${formatD(cnt)}/${formatD(sectionsData.length)} (${formatD(notes + sectionNoteCnt)} notes)');
 						else
-							Sys.stdout().writeString('\x1b[0GLoading $cnt/${sectionsData.length} (${notes + sectionNoteCnt} notes)');
+							Eseq.p('\x1b[0GLoading $cnt/${sectionsData.length} (${notes + sectionNoteCnt} notes)');
 						syncTime = Timer.stamp();
 					}
 				}
@@ -1931,17 +1928,11 @@ class PlayState extends MusicBeatState
 			var takenTime = CoolUtil.getNanoTime() - loadTime;
 			var takenNoteTime = CoolUtil.getNanoTime() - loadNoteTime;
 
-			if (!numberDelimit) {
-				Sys.println('Loaded ${notes} notes!
-Sustain notes amount: $sustainTotalCnt
-Taken time: ${numFormat(takenTime, 6)} sec
-Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
-			} else {
-				Sys.println('Loaded ${formatD(notes)} notes!
-Sustain notes amount: ${formatD(sustainTotalCnt)}
-Taken time: ${numFormat(takenTime, 6)} sec
-Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
-			}
+			Sys.println('Loaded ${numberDelimit ? formatD(notes) : Std.string(notes)} notes!\n' + 
+						'Sustain notes amount: ${numberDelimit ? formatD(sustainTotalCnt) : Std.string(sustainTotalCnt)}\n' + 
+						'Taken time: ${numFormat(takenTime, 6)} sec\n' + 
+						'Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}'
+			);
 
 			if (skipGhostNotes) {
 				if (ghostNotesCaught > 0)
@@ -3177,7 +3168,7 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 			
 			if (enableHoldSplash) {
 				for (holdSplash in susplashMap) {
-					if (holdSplash != null && (susEnds & 1 > 0)) holdSplash.sendSustainEnd();
+					if (holdSplash != null && (susEnds & 1 > 0)) holdSplash.sendSustainEnd(true);
 					susEnds >>= 1;
 				}
 			}
@@ -4609,6 +4600,11 @@ Average NPS in loading: ${numFormat(notes / takenNoteTime, 3)}');
 		{
 			spr.playAnim('static');
 			spr.resetAnim = 0;
+
+			if (enableHoldSplash) {
+				var susplash = grpHoldSplashes.members[key];
+				if (susplash != null) susplash.sendSustainEnd(susplash.isTimerWorking());
+			}
 		}
 		callOnScripts('onKeyRelease', [key]);
 	}

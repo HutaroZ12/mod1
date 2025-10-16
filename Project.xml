@@ -64,7 +64,7 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 
 	<!-- Other stuff -->
 	<define name="ACHIEVEMENTS_ALLOWED" />
-	<define name="TRANSLATIONS_ALLOWED" unless="web" />
+	<!-- <define name="TRANSLATIONS_ALLOWED" unless="web" /> -->
 
 	<!-- Allows the game to display a loading screen when loading songs-->
 	<define name="SHOW_LOADING_SCREEN" />

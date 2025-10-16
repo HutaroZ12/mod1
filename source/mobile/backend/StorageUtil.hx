@@ -16,7 +16,7 @@ class StorageUtil
 {
 	#if sys
 	// root directory, used for handling the saved storage type and path
-	private static final rootDir:String = LimeSystem.applicationStorageDirectory;
+	public static final rootDir:String = LimeSystem.applicationStorageDirectory;
 
 	public static function getStorageDirectory(?force:Bool = false):String
 	{

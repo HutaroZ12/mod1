@@ -1,5 +1,6 @@
 package;
 
+import hrk.Eseq;
 import mikolka.funkin.custom.mobile.MobileScaleMode;
 import states.InitState;
 import mikolka.vslice.components.crash.Logger;
@@ -48,7 +49,6 @@ class Main extends Sprite
 	// hi
 	public static var fpsBg:FPSBg;
 	public static var fpsVar:FPSCounter;
-	public static var debugBuild:Bool;
 
 	public static var isConsoleAvailable:Bool = true;
 	public static final platform:String = #if mobile "Phones" #else "PCs" #end;
@@ -113,15 +113,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		debugBuild = #if debug true #else false #end;
-
-		// #if desktop
-		try {
-			Sys.stdout().writeString("Console Available!\n");
-		} catch (e:Dynamic) {isConsoleAvailable = false;}
-		// #else
-		// isConsoleAvailable = false;
-		// #end
+		isConsoleAvailable = Eseq.available;
 
 		if (stage != null)
 		{

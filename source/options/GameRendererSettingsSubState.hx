@@ -256,7 +256,7 @@ class GameRendererSettingsSubState extends BaseOptionsMenu
 				++cnt;
 				FlxG.sound.play(Paths.sound('soundtray/Volup'), ClientPrefs.data.sfxVolume);
 			} else {
-				FlxG.sound.play(Paths.sound('soundtray/VolDown'), ClientPrefs.data.sfxVolume);
+				FlxG.sound.play(Paths.sound('soundtray/Voldown'), ClientPrefs.data.sfxVolume);
 			}
 
 			for (i in 0...(maxLength - codec.length)) {
@@ -290,8 +290,8 @@ class GameRendererSettingsSubState extends BaseOptionsMenu
 		ClientPrefs.data.codec = backupCodec;
 	}
 
-	override function changeSelection(change:Int = 0) {
-		super.changeSelection(change);
+	override function changeSelection(delta:Float, usePrecision:Bool = false) {
+		super.changeSelection(delta, usePrecision);
 		
 		if (missingText != null) {
 			missingText.visible = false;

@@ -69,6 +69,7 @@ class TitleState extends MusicBeatState
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
 	var swagShader:ColorSwap = null;
+	var busy:Bool = false;
 
 	function startIntro()
 	{
@@ -346,7 +347,7 @@ class TitleState extends MusicBeatState
 						FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 						FlxG.sound.music.fadeIn(4, 0, 0.7);
 					}
-					FlxTransitionableState.skipNextTransIn = true;
+					FlxTransitionableState.skipNextTransIn = false;
 					MusicBeatState.switchState(new MainMenuState());
 
 					closedState = true;

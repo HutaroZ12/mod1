@@ -63,18 +63,18 @@ class ResultState extends MusicBeatSubState
 	final score:ResultScore;
 
 	var characterAtlasAnimations:Array<
-		{
-			sprite:FlxAtlasSprite,
-			delay:Float,
-			forceLoop:Bool,
-			startFrameLabel:String,
-			sound:String
-		}> = [];
+	{
+		sprite:FlxAtlasSprite,
+		delay:Float,
+		forceLoop:Bool,
+		startFrameLabel:String,
+		sound:String
+	}> = [];
 	var characterSparrowAnimations:Array<
-		{
-			sprite:FunkinSprite,
-			delay:Float
-		}> = [];
+	{
+		sprite:FunkinSprite,
+		delay:Float
+	}> = [];
 
 	var playerCharacterId:Null<String>;
 
@@ -82,6 +82,9 @@ class ResultState extends MusicBeatSubState
 	final cameraBG:FunkinCamera;
 	final cameraScroll:FunkinCamera;
 	final cameraEverything:FunkinCamera;
+	
+	var isHighRank:Bool = false;
+	var isNewFreePlay:Bool = ClientPrefs.data.vsliceFreeplay;
 
 	public function new(params:ResultsStateParams)
 	{
@@ -939,7 +942,7 @@ class ResultState extends MusicBeatSubState
 			}
 			else
 			{
-				// isHighRank = rank > params.prevScoreRank;
+				isHighRank = rank > params.prevScoreRank;
 				if (isHighRank) //? refactor this???
 				{
 					trace('THE RANK IS Higher.....');

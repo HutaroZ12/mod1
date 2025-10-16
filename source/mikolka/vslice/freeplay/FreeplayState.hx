@@ -1,5 +1,6 @@
 package mikolka.vslice.freeplay;
 
+import hrk.Eseq;
 import flixel.FlxSubState;
 import mikolka.vslice.components.crash.UserErrorSubstate;
 import openfl.utils.AssetType;
@@ -145,8 +146,7 @@ class FreeplayState extends MusicBeatSubstate
 	 * For the audio preview, the volume at which the fade-out starts.
 	 */
 	public static final FADE_OUT_END_VOLUME:Float = 0.0;
-
-	var instance:FreeplayState;
+	
 	/**
 	 * For scaling some sprites on wide displays.
 	 */
@@ -408,9 +408,9 @@ class FreeplayState extends MusicBeatSubstate
 			}
 			if(Main.isConsoleAvailable) {
 				if (ClientPrefs.data.numberFormat)
-					Sys.stdout().writeString('\x1b[0GSetting Weeklist (${CoolUtil.formatMoney(index+1)}/${CoolUtil.formatMoney(allSongs.length)})');
+					Eseq.p('\x1b[0GSetting Weeklist (${CoolUtil.formatMoney(index+1)}/${CoolUtil.formatMoney(allSongs.length)})');
 				else
-					Sys.stdout().writeString('\x1b[0GSetting Weeklist (${index+1}/${allSongs.length})');
+					Eseq.p('\x1b[0GSetting Weeklist (${index+1}/${allSongs.length})');
 			}
 		}
 
@@ -493,6 +493,7 @@ class FreeplayState extends MusicBeatSubstate
 		grpFallbackDifficulty.setFormat(OldPaths.font("vcr.ttf"), 60, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		grpFallbackDifficulty.borderSize = 2;
 		grpFallbackDifficulty.antialiasing = ClientPrefs.data.antialiasing;
+		grpFallbackDifficulty.visible = false;
 		add(grpFallbackDifficulty);
 
 		exitMovers.set([grpDifficulties], {
@@ -2143,7 +2144,8 @@ class FreeplayState extends MusicBeatSubstate
 
 		if (transIn)
 		{
-			if (!diffObj.hasValidTexture)
+			grpFallbackDifficulty.visible = !diffObj.hasValidTexture;
+			if (grpFallbackDifficulty.visible)
 			{
 				grpFallbackDifficulty.text = diffObj.difficultyId;
 				grpFallbackDifficulty.updateHitbox();
@@ -2151,7 +2153,6 @@ class FreeplayState extends MusicBeatSubstate
 			}
 			else {
 				diffSprite.visible = true;
-				grpFallbackDifficulty.text = "";
 			}
 
 			diffSprite.x = (change > 0) ? 500 : -320;
@@ -2362,11 +2363,10 @@ class FreeplayState extends MusicBeatSubstate
 			trace('ERROR! $e');
 			UserErrorSubstate.makeMessage("Failed to load a song",
 				'${e.message}\n\n${e.details()}'
-				);
-			@:privateAccess{
-				state.busy = false;
-				state.letterSort.inputEnabled = true;
-			}
+			);
+
+			busy = false;
+			letterSort.inputEnabled = true;
 			return;
 		}
 		FlxG.sound.music.volume = 0;

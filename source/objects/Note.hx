@@ -546,8 +546,8 @@ class Note extends FlxSprite
 			}
 		}
 		if(copyScale){
-			scale.x = strumScale.x;
-			if(!isSustainNote) scale.y = strumScale.y;
+			scale.x = strum.scale.x;
+			if(!isSustainNote) scale.y = strum.scale.y;
 			updateHitbox();
 		}
 	}

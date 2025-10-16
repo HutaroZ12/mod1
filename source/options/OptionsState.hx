@@ -59,7 +59,7 @@ class OptionsState extends MusicBeatState
 				else
 					openSubState(new options.ControlsSubState());
 			#if desktop
-			case 'Game Renderer':
+			case 'Video Rendering':
 				openSubState(new options.GameRendererSettingsSubState());
 			#end
 			case 'Optimizations':
@@ -172,6 +172,7 @@ class OptionsState extends MusicBeatState
 		add(button);
 		#end
 		
+		FlxG.sound.play(Paths.sound('scrollMenu'), ClientPrefs.data.sfxVolume);
 		super.create();
 	}
 
@@ -193,15 +194,16 @@ class OptionsState extends MusicBeatState
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		if(exiting) return;
+		if (exiting) return;
 
-		if (controls.UI_UP_P){
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-			changeSelection(-1,true);
+		if (controls.UI_UP_P || controls.UI_DOWN_P)
+		{
+			changeSelection(controls.UI_UP_P ? -1 : 1,true);
 		}
-		if (controls.UI_DOWN_P){
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-			changeSelection(1,true);
+
+		if (FlxG.mouse.wheel != 0)
+		{
+			changeSelection(-FlxG.mouse.wheel);
 		}
 
 		// var lerpVal:Float = Math.max(0, Math.min(1, elapsed * 7.5));
@@ -238,7 +240,7 @@ class OptionsState extends MusicBeatState
 		else if (controls.ACCEPT) openSelectedSubstate(options[curSelected]);
 	}
 	
-	function changeSelection(delta:Float,usePrecision:Bool = false) {
+	function changeSelection(delta:Float = 0, usePrecision:Bool = false) {
 		if(usePrecision) {
 			if(delta != 0) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 			curSelected =  FlxMath.wrap(curSelected + Std.int(delta), 0, options.length - 1);

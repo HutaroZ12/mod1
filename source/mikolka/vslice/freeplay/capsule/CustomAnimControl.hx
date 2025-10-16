@@ -1,6 +1,7 @@
 package mikolka.vslice.freeplay.capsule;
 
 import mikolka.funkin.custom.mobile.MobileScaleMode;
+import mikolka.vslice.freeplay.FreeplayState;
 
 class CustomAnimControl {
    	public var doLerp:Bool = false;
@@ -104,7 +105,7 @@ class CustomAnimControl {
 				// I have no idea why this if instead of frameInTypeBeat == xFrames.length works even though they're the same thing
 				 if (host.targetPos.x <= shiftx)
                     @:privateAccess
-				 	host.targetPos.x = host.intendedX(host.ID+1-FreeplayState.instance.curSelectedFractal) + widescreenMult;
+				 	host.targetPos.x = host.intendedX(host.ID+1 - FreeplayState.instance.curSelectedFractal) + widescreenMult;
 			}
 			else if (frameInTypeBeat == xFrames.length)
 			{

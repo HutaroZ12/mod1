@@ -1,6 +1,7 @@
 package mikolka.vslice.ui.mainmenu;
 
-import mikolka.vslice.freeplay.FreeplayState;
+import states.FreeplayState;
+import mikolka.vslice.freeplay.FreeplayState as NewFreeplayState;
 import options.OptionsState;
 import flixel.FlxBasic;
 import flixel.effects.FlxFlicker;
@@ -75,7 +76,7 @@ class DesktopMenuState extends FlxBasic
 			menuItem.screenCenter(X);
 		}
 
-		FlxG.camera.follow(camFollow, null, 0.06);
+		FlxG.camera.follow(camFollow, null, 0.125);
         changeItem();
     }
 
@@ -84,11 +85,11 @@ class DesktopMenuState extends FlxBasic
 	{
 		if (!selectedSomethin)
 		{
-			if (host.controls.UI_UP_P)
-				changeItem(-1);
-
-			if (host.controls.UI_DOWN_P)
-				changeItem(1);
+			if (host.controls.UI_UP_P || host.controls.UI_DOWN_P)
+				changeItem(host.controls.UI_UP ? -1 : 1);
+			
+			if (FlxG.mouse.wheel != 0)
+				changeItem(-FlxG.mouse.wheel);
 
 			if (host.controls.BACK)
 			{
@@ -120,14 +121,14 @@ class DesktopMenuState extends FlxBasic
 							case 'story_mode':
 								MusicBeatState.switchState(new StoryMenuState());
 							case 'freeplay':
-								{
+								if (ClientPrefs.data.vsliceFreeplay) {
 									host.persistentDraw = true;
 									host.persistentUpdate = false;
 									// Freeplay has its own custom transition
 									FlxTransitionableState.skipNextTransIn = true;
 									FlxTransitionableState.skipNextTransOut = true;
 
-									host.openSubState(new FreeplayState());
+									host.openSubState(new NewFreeplayState());
 									host.subStateOpened.addOnce(state ->
 									{
 										for (i in 0...menuItems.members.length)
@@ -139,6 +140,8 @@ class DesktopMenuState extends FlxBasic
 										}
 										changeItem(0);
 									});
+								} else {
+									MusicBeatState.switchState(new FreeplayState());
 								}
 
 							#if MODS_ALLOWED
@@ -154,7 +157,7 @@ class DesktopMenuState extends FlxBasic
 							case 'credits':
 								MusicBeatState.switchState(new CreditsState());
 							case 'options':
-								host.goToOptions();
+								goToOptions();
 						}
 					});
 
@@ -183,6 +186,18 @@ class DesktopMenuState extends FlxBasic
 		}
 
 		super.update(elapsed);
+	}
+	
+	function goToOptions()
+	{
+		MusicBeatState.switchState(new OptionsState());
+		#if !LEGACY_PSYCH OptionsState.onPlayState = false; #end
+		if (PlayState.SONG != null)
+		{
+			PlayState.SONG.arrowSkin = null;
+			PlayState.SONG.splashSkin = null;
+			#if !LEGACY_PSYCH PlayState.stageUI = 'normal'; #end
+		}
 	}
 
 	function changeItem(huh:Int = 0)
