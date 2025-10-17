@@ -52,22 +52,26 @@ class MobileMenuState extends FlxBasic {
 		grid.makeButton('freeplay', 0, () ->
 		{
 			FlxG.mouse.visible = false;
-			host.persistentDraw = true;
-			host.persistentUpdate = false;
-			// Freeplay has its own custom transition
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
+			if (ClientPrefs.data.vsliceFreeplay) {
+				host.persistentDraw = true;
+				host.persistentUpdate = false;
+				// Freeplay has its own custom transition
+				FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransOut = true;
 
-			host.openSubState(new FreeplayState());
-			host.subStateOpened.addOnce(state ->
-			{
-				grid.revealButtons();
-				selectedSomethin = false;
-				grid.selectButton();
-			});
-			if(!host.controls.mobileC) host.subStateClosed.addOnce((x) ->{
-				FlxG.mouse.visible = true;
-			});
+				host.openSubState(new FreeplayState());
+				host.subStateOpened.addOnce(state ->
+				{
+					grid.revealButtons();
+					selectedSomethin = false;
+					grid.selectButton();
+				});
+				if (!host.controls.mobileC) host.subStateClosed.addOnce(x -> {
+					FlxG.mouse.visible = true;
+				});
+			} else {
+				MusicBeatState.switchState(new FreeplayState());
+			}
 		}).selectedOffset.set(10,20);
 		#if MODS_ALLOWED
 		grid.makeButton('mods', 0, () ->

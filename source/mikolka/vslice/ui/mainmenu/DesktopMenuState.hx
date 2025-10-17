@@ -2,7 +2,6 @@ package mikolka.vslice.ui.mainmenu;
 
 import states.FreeplayState;
 import mikolka.vslice.freeplay.FreeplayState as NewFreeplayState;
-import options.OptionsState;
 import flixel.FlxBasic;
 import flixel.effects.FlxFlicker;
 import mikolka.vslice.ui.title.TitleState;

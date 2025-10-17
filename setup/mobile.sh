@@ -17,7 +17,7 @@ haxelib install hscript-iris 1.1.3 --quiet
 haxelib install tjson 1.4.0 --quiet 
 
 #Specific
-haxelib git lime https://github.com/Psych-Slice/lime-mobile.git --quiet # tracks lime 8.2.2
+haxelib git lime https://github.com/Psych-Slice/lime-mobile.git --quiet
 haxelib git openfl https://github.com/FunkinCrew/openfl.git a0df7c3afe360c9af59a76e45007dbf4e53b5131 --quiet --skip-dependencies
 haxelib git hxdiscord_rpc https://github.com/MAJigsaw77/hxdiscord_rpc f9353b9edce10f4605d125dd1bda24ac36898bfb --quiet --skip-dependencies
 haxelib install hxvlc 2.2.2 --quiet --skip-dependencies

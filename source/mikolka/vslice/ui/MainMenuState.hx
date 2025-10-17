@@ -3,14 +3,7 @@ package mikolka.vslice.ui;
 import mikolka.vslice.ui.mainmenu.DesktopMenuState;
 import mikolka.compatibility.ui.MainMenuHooks;
 import mikolka.compatibility.VsliceOptions;
-import mikolka.vslice.ui.title.TitleState;
 import mikolka.compatibility.ModsHelper;
-import states.FreeplayState;
-import mikolka.vslice.freeplay.FreeplayState as NewFreeplayState;
-import flixel.FlxObject;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.effects.FlxFlicker;
-import lime.app.Application;
 import options.OptionsState;
 
 class MainMenuState extends MusicBeatState
