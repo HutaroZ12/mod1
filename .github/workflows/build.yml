@@ -94,14 +94,14 @@ jobs:
           SIGNING_ALIAS: hslice
           SIGNING_FILE: ${{ secrets.HRK_EXEX_KEYSTORE }}
         run: |
-          rm -f ./key.keystore;
-          echo $SIGNING_FILE | base64 -d > ./key.keystore;
-          sha256sum ./key.keystore;
+          rm -f ./hslice.keystore;
+          echo $SIGNING_FILE | base64 -d > ./hslice.keystore;
+          sha256sum ./hslice.keystore;
 
           mv '${{env.OUT_DIR}}H-Slice-release.apk' '${{env.OUT_DIR}}H-Slice-unsigned.apk';
           $ANDROID_HOME/build-tools/35.0.1/zipalign -P 16 -f -v 4 '${{env.OUT_DIR}}H-Slice-unsigned.apk' '${{env.OUT_DIR}}H-Slice-release.apk' > /dev/null;
 
-          $ANDROID_HOME/build-tools/35.0.1/apksigner sign --ks key.keystore --ks-key-alias $SIGNING_ALIAS --ks-pass "env:SIGNING_KEY" --key-pass "env:SIGNING_KEY" '${{env.OUT_DIR}}H-Slice-release.apk';
+          $ANDROID_HOME/build-tools/35.0.1/apksigner sign --ks hslice.keystore --ks-key-alias $SIGNING_ALIAS --ks-pass "env:SIGNING_KEY" --key-pass "env:SIGNING_KEY" '${{env.OUT_DIR}}H-Slice-release.apk';
           rm '${{env.OUT_DIR}}H-Slice-unsigned.apk';
 
       - name: Make IPA
