@@ -93,11 +93,8 @@ class FreeplayHelpers {
 		}
 		Sys.print("\n");
 		
-		// for mobile compability
-		#if mobile
-		if (!NativeFileSystem.exists('assets'))
-			NativeFileSystem.createDirectory('assets');
-		#end
+		if (!NativeFileSystem.exists('cache'))
+			NativeFileSystem.createDirectory('cache');
 
 		File.saveContent("cache/bpmList.json", Json.stringify(BPMCache.freeplayBPMs));
 
