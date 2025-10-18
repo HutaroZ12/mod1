@@ -995,7 +995,7 @@ class FunkinPreloader extends FlxBasePreloader
 		for (i in 0...ellipsisCount)
 			ellipsis += '.';
 
-		var percentage:Int = Math.floor(percent * 100);
+		var percentage = CoolUtil.floatToStringPrecision((previousSteps + percent) * 100.0 / TOTAL_STEPS, 1);
 		var loadTime:Float = CoolUtil.floorDecimal(elapsed, 3);
 		previousSteps = currentSteps;
 		// Render status text
@@ -1032,7 +1032,7 @@ class FunkinPreloader extends FlxBasePreloader
 			#end
 		}
 		
-		if (previousSteps != currentSteps) Sys.println('Preloader state ($currentSteps/$TOTAL_STEPS) ' + currentState + ' (' + percentage + '%, ' + loadTime + 's)');
+		if (previousSteps != currentSteps) Sys.println('Preloader state ($currentSteps/$TOTAL_STEPS) $currentState ($percentage%, ${loadTime}s)');
 
 		// Render percent text
 		progressRightText.text = '$percentage%';

@@ -116,12 +116,11 @@ class FreeplayState extends MusicBeatState
 				}
 				addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
 			}
-			if(Main.isConsoleAvailable) {
-				if (ClientPrefs.data.numberFormat)
-					Eseq.p('\x1b[0GLoading Weeklist (${CoolUtil.formatMoney(i+1)}/${CoolUtil.formatMoney(WeekData.weeksList.length)})');
-				else
-					Eseq.p('\x1b[0GLoading Weeklist (${i+1}/${WeekData.weeksList.length})');
-			}
+			
+			if (ClientPrefs.data.numberFormat)
+				Eseq.p('Loading Weeklist (${CoolUtil.formatMoney(i+1)}/${CoolUtil.formatMoney(WeekData.weeksList.length)})');
+			else
+				Eseq.p('Loading Weeklist (${i+1}/${WeekData.weeksList.length})');
 		}
 		Sys.print("\n");
 		Mods.loadTopMod();
@@ -303,9 +302,8 @@ class FreeplayState extends MusicBeatState
 					curr = Std.string(loading); total = Std.string(songs.length);
 				}
 
-				if (Main.isConsoleAvailable) {
-					Eseq.p('\x1b[0GLoading Song - $curr / $total - $prog % Done');
-				}
+				Eseq.p('Loading Song - $curr / $total - $prog % Done');
+				
 				loadingText.text = 'Loading Song...\n$curr / $total - $prog % Done';
 				loadingText.screenCenter();
 

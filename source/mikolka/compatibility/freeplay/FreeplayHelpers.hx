@@ -73,11 +73,9 @@ class FreeplayHelpers {
 			WeekData.setDirectoryFromWeek(leWeek);
 			for (j => song in leWeek.songs)
 			{
-				if (Main.isConsoleAvailable) {
-					if (ClientPrefs.data.numberFormat)
-						Eseq.p('\x1b[0GLoading Song (${CoolUtil.formatMoney(j+offset+1)}/${CoolUtil.formatMoney(songCount)})');
-					else Eseq.p('\x1b[0GLoading Song (${j+offset+1}/$songCount)');
-				}
+				if (ClientPrefs.data.numberFormat)
+					Eseq.p('Loading Song (${CoolUtil.formatMoney(j+offset+1)}/${CoolUtil.formatMoney(songCount)})');
+				else Eseq.p('Loading Song (${j+offset+1}/$songCount)');
 
 				colors = song[2];
 				if (colors == null || colors.length < 3)

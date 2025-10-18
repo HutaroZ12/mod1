@@ -1834,16 +1834,13 @@ class PlayState extends MusicBeatState
 			var loadNoteTime:Float = CoolUtil.getNanoTime();
 
 			function showProgress(force:Bool = false) {
-				if (Main.isConsoleAvailable)
+				if (Timer.stamp() - syncTime > updateElapse || force)
 				{
-					if (Timer.stamp() - syncTime > updateElapse || force)
-					{
-						if (numberDelimit) 
-							Eseq.p('\x1b[0GLoading ${formatD(cnt)}/${formatD(sectionsData.length)} (${formatD(notes + sectionNoteCnt)} notes)');
-						else
-							Eseq.p('\x1b[0GLoading $cnt/${sectionsData.length} (${notes + sectionNoteCnt} notes)');
-						syncTime = Timer.stamp();
-					}
+					if (numberDelimit) 
+						Eseq.p('Loading ${formatD(cnt)}/${formatD(sectionsData.length)} (${formatD(notes + sectionNoteCnt)} notes)');
+					else
+						Eseq.p('Loading $cnt/${sectionsData.length} (${notes + sectionNoteCnt} notes)');
+					syncTime = Timer.stamp();
 				}
 			}
 

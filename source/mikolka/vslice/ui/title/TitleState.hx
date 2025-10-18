@@ -1,5 +1,6 @@
 package mikolka.vslice.ui.title;
 
+import hrk.Eseq;
 import mikolka.vslice.components.crash.Logger;
 import haxe.Timer;
 import backend.WeekData;
@@ -61,6 +62,13 @@ class TitleState extends MusicBeatState
 		Paths.clearStoredMemory();
 		super.create();
 		Paths.clearUnusedMemory();
+
+		try {
+			Eseq.p('Console Available!');
+		} catch (e) {
+			Eseq.available = false;
+		}
+		
 		startIntro();
 	}
 
