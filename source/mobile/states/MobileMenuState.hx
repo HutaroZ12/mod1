@@ -1,7 +1,8 @@
 package mobile.states;
 
 import flixel.effects.FlxFlicker;
-import mikolka.vslice.freeplay.FreeplayState;
+import states.FreeplayState;
+import mikolka.vslice.freeplay.FreeplayState as NewFreeplayState;
 import mikolka.vslice.ui.title.TitleState;
 import mikolka.funkin.custom.mobile.MobileScaleMode;
 import mobile.objects.GridButtons;
@@ -59,7 +60,7 @@ class MobileMenuState extends FlxBasic {
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
 
-				host.openSubState(new FreeplayState());
+				host.openSubState(new NewFreeplayState());
 				host.subStateOpened.addOnce(state ->
 				{
 					grid.revealButtons();
