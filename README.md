@@ -1,7 +1,7 @@
 <h1 align="center">
   <br>
   <a href="https://github.com/HRK-EXEX/H-Slice">
-    <img src="/art/iconOG.png" alt="H-Slice" width="150">
+    <img src="/art/desktop/iconOG.png" alt="H-Slice" width="150">
   </a>
   <br>
   <b>H-Slice Engine</b>
