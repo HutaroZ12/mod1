@@ -1,6 +1,6 @@
 package mikolka.stages.standard;
 
-import states.stages.objects.*;
+import mikolka.vslice.StickerSubState;
 
 class Clouds extends BaseStage
 {
