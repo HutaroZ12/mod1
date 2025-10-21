@@ -1,0 +1,42 @@
+{
+	"songs": [
+		[
+			"Clouding",
+			"eyz",
+			[
+				255,
+				255,
+				255
+			]
+		],
+		[
+			"RayQuest",
+			"eyz",
+			[
+				255,
+				255,
+				255
+			]
+		]
+	],
+	"hiddenUntilUnlocked": false,
+	"hideFreeplay": false,
+	"weekBackground": "stage",
+	"musican": "N/A",
+	"difficulties": "normal",
+	"weekCharacters": [
+		"eyzpink",
+		"eyzcyan",
+		"eyz"
+	],
+	"storyName": "Vs eyz",
+	"weekName": "eyz",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"hideStoryMode": false,
+	"weekBefore": "tutorial",
+	"startUnlocked": true
+}
