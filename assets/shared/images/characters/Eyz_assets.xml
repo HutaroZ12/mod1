@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Eyz_assets.png">
+	<!-- Created using the Spritesheet and XML generator -->
+	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
+	<SubTexture name="Eyz Idle0000" x="774" y="3985" width="653" height="1291" frameX="-485" frameY="-68" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Idle0001" x="5042" y="2681" width="675" height="1287" frameX="-471" frameY="-72" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Idle0002" x="4265" y="2681" width="655" height="1289" frameX="-481" frameY="-70" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Idle0003" x="5822" y="0" width="625" height="1308" frameX="-496" frameY="-51" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Idle0004" x="5822" y="1308" width="620" height="1312" frameX="-495" frameY="-47" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Idle0005" x="0" y="3985" width="774" height="1313" frameX="-339" frameY="-46" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Idle0006" x="0" y="3985" width="774" height="1313" frameX="-339" frameY="-46" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Idle0007" x="0" y="3985" width="774" height="1313" frameX="-339" frameY="-46" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Up0000" x="4265" y="0" width="777" height="1350" frameX="-356" frameY="-28" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Up0001" x="4265" y="1350" width="773" height="1331" frameX="-403" frameY="-15" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Up0002" x="5042" y="1341" width="772" height="1340" frameX="-404" frameY="-6" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Up0003" x="5042" y="1341" width="772" height="1340" frameX="-404" frameY="-6" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Up0004" x="5042" y="0" width="780" height="1341" frameX="-403" frameY="-5" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Down0000" x="2016" y="1353" width="769" height="1021" frameX="-426" frameY="-328" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Down0001" x="1616" y="2706" width="755" height="1028" frameX="-436" frameY="-321" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Down0002" x="862" y="2706" width="754" height="1030" frameX="-436" frameY="-319" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Down0003" x="862" y="2706" width="754" height="1030" frameX="-436" frameY="-319" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Down0004" x="1427" y="3985" width="726" height="1032" frameX="-458" frameY="-317" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Left0000" x="1119" y="1353" width="897" height="1261" frameX="-153" frameY="-96" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Left0001" x="3397" y="0" width="868" height="1275" frameX="-175" frameY="-82" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Left0002" x="3397" y="1275" width="864" height="1277" frameX="-179" frameY="-80" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Left0003" x="3397" y="1275" width="864" height="1277" frameX="-179" frameY="-80" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Left0004" x="0" y="2706" width="862" height="1279" frameX="-182" frameY="-78" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Right0000" x="0" y="0" width="1151" height="1353" frameX="-609" frameY="-42" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Right0001" x="1151" y="0" width="1125" height="1352" frameX="-606" frameY="-43" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Right0002" x="2276" y="0" width="1121" height="1352" frameX="-606" frameY="-43" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Right0003" x="2276" y="0" width="1121" height="1352" frameX="-606" frameY="-43" frameWidth="2454" frameHeight="1432"/>
+	<SubTexture name="Eyz Right0004" x="0" y="1353" width="1119" height="1353" frameX="-604" frameY="-42" frameWidth="2454" frameHeight="1432"/>
+</TextureAtlas>
