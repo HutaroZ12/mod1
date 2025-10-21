@@ -1,4 +1,7 @@
-package states.stages;
+package mikolka.stages.standard;
+
+import objects.Character;
+import objects.Note;
 
 import states.stages.objects.*;
 
