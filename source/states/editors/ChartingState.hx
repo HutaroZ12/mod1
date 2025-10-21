@@ -87,7 +87,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			'Philly Glow',
 			"Exclusive to Week 3\nValue 1: 0/1/2 = OFF/ON/Reset Gradient\n \nNo, i won't add it to other weeks."
 		],
-		['Kill Henchmen', "For Mom's songs, don't use this please, i love them :("],
+		[
+			'Kill Henchmen',
+			"For Mom's songs, don't use this please, i love them :("
+		],
 		[
 			'Add Camera Zoom',
 			"Used on MILF on that one \"hard\" part\nValue 1: Camera zoom add (Default: 0.015)\nValue 2: UI zoom add (Default: 0.03)\nLeave the values blank if you want to use Default."
