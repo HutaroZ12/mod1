@@ -782,34 +782,29 @@ class PlayState extends MusicBeatState
 		noteTypes = null;
 		eventsPushed = null;
 
-		if (eventNotes.length > 1)
+		if(eventNotes.length > 1)
 		{
-			for (event in eventNotes)
-				event.strumTime -= eventEarlyTrigger(event);
+			for (event in eventNotes) event.strumTime -= eventEarlyTrigger(event);
 			eventNotes.sort(sortByTime);
 		}
 
 		// SONG SPECIFIC SCRIPTS
-		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
+		#if ((LUA_ALLOWED || HSCRIPT_ALLOWED) && sys)
 		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'data/$songName/'))
-			#if linux
-			for (file in CoolUtil.sortAlphabetically(NativeFileSystem.readDirectory(folder)))
-			#else
-			for (file in NativeFileSystem.readDirectory(folder))
-			#end
-		{
-			#if LUA_ALLOWED
-			if (file.toLowerCase().endsWith('.lua'))
-				new FunkinLua(folder + file);
-			#end
+			for (file in FileSystem.readDirectory(folder))
+			{
+				#if LUA_ALLOWED
+				if(file.toLowerCase().endsWith('.lua'))
+					new FunkinLua(folder + file);
+				#end
 
-			#if HSCRIPT_ALLOWED
-			if (file.toLowerCase().endsWith('.hx'))
-				initHScript(folder + file);
-			#end
-		}
+				#if HSCRIPT_ALLOWED
+				if(file.toLowerCase().endsWith('.hx'))
+					initHScript(folder + file);
+				#end
+			}
 		#end
-
+			
 		#if TOUCH_CONTROLS_ALLOWED
 		addHitbox();
 		hitbox.visible = true;
