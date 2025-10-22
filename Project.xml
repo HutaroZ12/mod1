@@ -146,7 +146,7 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 	<assets path="assets/videos"        if="VIDEOS_ALLOWED"/>
 	<assets path="assets/songs"         exclude="*.ogg" if="web"/>
 	<assets path="assets/songs"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/custom_events" />
+	<assets path="assets/custom_events" if="MODS_ALLOWED"/>
 	
 
 	<assets path="assets/shared"         unless="web"/>
