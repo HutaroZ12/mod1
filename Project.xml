@@ -146,11 +146,11 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 	<assets path="assets/videos"        if="VIDEOS_ALLOWED"/>
 	<assets path="assets/songs"         exclude="*.ogg" if="web"/>
 	<assets path="assets/songs"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/custom_events" if="MODS_ALLOWED"/>
-	
 
 	<assets path="assets/shared"         unless="web"/>
 	<assets path="assets/shared"         if="web"/>
+	<assets path="assets/shared/custom_events" if="MODS_ALLOWED"/>
+	<assets path="assets/shared/custom_events" unless="MODS_ALLOWED"/>
 
 	<assets path="assets/embed"          if="web" embed="true"/>
 	<assets path="assets/embed"          unless="web || OPENFL_LOOKUP" embed="false"/>
@@ -168,7 +168,6 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 		<assets path="assets/translations" rename="assets" exclude="*.ogg" if="web"/>
 		<assets path="assets/translations" rename="assets"   unless="web"/>
 	</section>
-
 
 	<assets path="assets/atsc_shared" rename="assets/shared" if="ATSC_SUPPORT" exclude="*.png"/>
 	<assets path="assets/atsc_shared" rename="assets/shared"  exclude="*.astc" unless="ATSC_SUPPORT"/>
