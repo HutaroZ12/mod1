@@ -149,6 +149,7 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 
 	<assets path="assets/shared"         unless="web"/>
 	<assets path="assets/shared"         if="web"/>
+	<assets path="assets/shared/custom_events"         if="web"/>
 
 	<assets path="assets/embed"          if="web" embed="true"/>
 	<assets path="assets/embed"          unless="web || OPENFL_LOOKUP" embed="false"/>
