@@ -39,8 +39,7 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 
 	<!-- Adds support for Psych's lua/HScript files -->
 	<define name="HSCRIPT_ALLOWED" if="desktop || mobile"/>
-	<define name="LUA_ALLOWED" if="cpp" />
-
+	<define name="LUA_ALLOWED" if="desktop || mobile" unless="hl"/>
 	<!-- Enables Discord's Rich Presence integration -->
 	<define name="DISCORD_ALLOWED" if="desktop" unless="hl"/>
 	
@@ -149,8 +148,8 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 
 	<assets path="assets/shared"         unless="web"/>
 	<assets path="assets/shared"         if="web"/>
-	<assets path="assets/shared/custom_events" if="MODS_ALLOWED"/>
-	<assets path="assets/shared/custom_events" unless="MODS_ALLOWED"/>
+	<assets path="assets/shared/custom_events" if="LUA_ALLOWED"/>
+	<assets path="assets/shared/custom_events" unless="LUA_ALLOWED"/>
 
 	<assets path="assets/embed"          if="web" embed="true"/>
 	<assets path="assets/embed"          unless="web || OPENFL_LOOKUP" embed="false"/>
