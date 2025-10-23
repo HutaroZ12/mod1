@@ -1,6 +1,3 @@
---/ Created by RamenDominoes (Feel free to credit or not I don't really care)
--- Not bad for my first event created... I think
-
 start = 0
 finish = 0
 
@@ -86,3 +83,4 @@ function showHUD()
     doTweenAlpha('AlphaTween8', 'timeTxt', 1, 0.25)
 
 end
+
