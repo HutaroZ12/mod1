@@ -779,8 +779,7 @@ class PlayState extends MusicBeatState
 			startHScriptsNamed('custom_notetypes/' + notetype + '.hx');
 	//	for (event in eventsPushed)
 	//		startHScriptsNamed('custom_events/' + event + '.hx');
-		for (event in Paths.getSharedPath)
-			for (event in Paths.getSharedPath('custom_events/' + '.hx'))
+		for (event in Paths.getSharedPath('custom_events/' + '.hx'))
 		#end
 		noteTypes = null;
 		eventsPushed = null;
