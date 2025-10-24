@@ -771,7 +771,6 @@ class PlayState extends MusicBeatState
 			startLuasNamed('custom_notetypes/' + notetype + '.lua');
 		for (event in eventsPushed)
 			startLuasNamed('custom_events/' + event + '.lua');
-		#else
 		for (folder in Paths.getSharedPath)
 			startLuasNamed('shared/custom_events/' + event + '.lua');
 		#end
@@ -781,6 +780,8 @@ class PlayState extends MusicBeatState
 			startHScriptsNamed('custom_notetypes/' + notetype + '.hx');
 		for (event in eventsPushed)
 			startHScriptsNamed('custom_events/' + event + '.hx');
+		for (folder in Paths.getSharedPath)
+			startHscriptsNamed('shared/custom_events/' + event + '.hx');
 		#end
 		noteTypes = null;
 		eventsPushed = null;
